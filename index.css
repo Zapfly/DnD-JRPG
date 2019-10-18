@@ -1,0 +1,42 @@
+div {
+    margin: 5px;
+}
+
+#battlefield {
+    background-color: grey;
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.creature {
+    background: lightgray;
+    display: flex;
+    justify-items: center;
+
+}
+
+.profile {
+    height: 50vh;
+}
+
+#hud {
+    background: black;
+    display: grid;
+    grid-template-columns: 3;
+}
+
+#actions {
+    display: grid;
+    border-style: solid;
+    border-color: white; 
+    width: 100px;
+}
+
+#combat-log {
+    color: white;
+    display: flex;
+    align-items: flex-start;
+}
+

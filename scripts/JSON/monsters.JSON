@@ -1,0 +1,8 @@
+{
+    "monster": {
+        "name": "goblin",
+        "class": "monster",
+        "attack":5,
+        "HP":30
+    }
+}
