@@ -32,11 +32,13 @@ div {
     border-style: solid;
     border-color: white; 
     width: 100px;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 #combat-log {
     color: white;
     display: flex;
     align-items: flex-start;
+    
 }
 
