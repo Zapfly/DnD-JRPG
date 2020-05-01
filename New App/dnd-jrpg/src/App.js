@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,7 +11,28 @@ import Card from 'react-bootstrap/Card';
 
 const App = () => {
   return (
-    <Col lg={12} style={{ height: "10vh", border: "solid 1px black" }}>Test</Col>
+    <Container fluid style={{ height: "100vh" }}>
+      <Row style={{height: "10%"}}>
+        <Col className="text-center" style={{fontSize: "6vh", fontWeight: "bold" }}>Monster Dungeon</Col>
+      </Row>
+      <Row className="battle-field" style={{height: "60%"}}>
+        <Col className="player-side">
+          
+        </Col>
+        <Col className="monster-side"></Col>
+      </Row>
+      <Row className="interface text-center justify-content-center" style={{height: "28%"}}>
+        <Col lg={3} className="commands">
+          <Container style={{height: "98%"}}>
+            <button>Attack</button>
+          </Container>
+        </Col>
+        <Col lg={8} className="combat-log">
+          Combat Log
+        </Col>
+      </Row>
+    </Container>
+
 
     // <div className="container-fluid h-100">
     //   <div className="container-fluid col-xs-12 text-center border border-primary h-25">
