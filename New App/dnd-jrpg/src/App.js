@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import HeroComp from './Components/HeroComp'
+import { Arena } from './scripts/combat.js';
+import Herc from './images/Herccolored.png';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,10 +12,14 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 
 
+const arena = new Arena()    
+arena.createHero("Hercules", 30, 20, Herc)
 
 const App = () => {
 
   
+  useEffect(() => {
+  }, [])
   return (
     <Container fluid style={{ height: "100vh" }}>
       <Row style={{height: "10%"}}>
@@ -19,7 +27,11 @@ const App = () => {
       </Row>
       <Row className="battle-field" style={{height: "60%"}}>
         <Col className="player-side">
-          
+          < HeroComp 
+          heroInfo = {arena.combatants[0]}
+          heroSprite = {arena.combatants[0].sprite}
+        
+          />
         </Col>
         <Col className="monster-side"></Col>
       </Row>

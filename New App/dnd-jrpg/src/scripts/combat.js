@@ -32,13 +32,6 @@ export class Arena {// different for each encounter
         this.currentTurn = 0;
     }
 
-    // createCombatant(name, atk, hp, sprite) {
-    //     this.counter++
-    //     const newCombatant = new Combatant (this.counter, name, atk, hp, sprite);
-    //     this.combatants.push(newCombatant);
-    //     return newCombatant;
-    // }
-
     createHero(name, atk, hp, sprite) {
         this.counter++
         const newHero = new Hero (this.counter, name, atk, hp, sprite);
@@ -56,19 +49,38 @@ export class Arena {// different for each encounter
         return newMonster;
     }
 
-
-    cycleTurn() {
-        if (this.currentTurn < this.combatants.length - 1) {
-            this.currentTurn = this.currentTurn + 1
-        }
-        else this.currentTurn = 0;
-        // if(this.combatants[this.currentTurn].hp <= 0) {
-        //     this.cycleTurn()
-        // }
+    victoryCheck() {
+        const heroVictory = this.monsters.every( monster => monster.hp <= 0 )
+        const monsterVictory = this.heroes.every( hero => hero.hp <= 0 )
+        
+        if (heroVictory == true) {
+            return "victory"
+        } else if (monsterVictory == true) {
+            return "defeat"
+        } else {return "contested"} 
     }
 
-    turnLog(victim, attacker) {
-        return `${attacker.name} attacks ${victim.name} for ${attacker.atk}.`
+    turnIncrement() {
+        if(this.combatants[this.currentTurn].hp <= 0) {
+            this.currentTurn = this.currentTurn + 1
+            this.turnIncrement()
+        }
+    }
+
+    cycleTurn() {
+        const condition = this.victoryCheck()
+        if (condition === "contested"){
+
+            if (this.currentTurn < this.combatants.length - 1) {
+                this.currentTurn = this.currentTurn + 1
+            }
+            else this.currentTurn = 0;
+
+            this.turnIncrement()
+            return condition
+            
+            
+        } else {return condition}
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {
