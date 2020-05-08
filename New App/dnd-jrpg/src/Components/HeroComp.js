@@ -10,13 +10,14 @@ import Image from 'react-bootstrap/Image';
 const HeroComp = (props) => {
     console.log(props.heroSprite)
     const name = props.heroInfo.name
-    const healthbar = props.heroInfo.hp 
+    const healthbar = '200px'
+    const currentHp = props.heroInfo.hp
     return( 
         <Container className="text-center h-100">
             <div>{name}</div>
             <Image className="img-responsive" src={props.heroInfo.sprite} height={300} ></Image> 
             <div className= "healthbar" style={{width: `${healthbar}px`}}>
-            <div></div>
+            <div style = {{}}></div>
             </div>      
         </Container>
     )
