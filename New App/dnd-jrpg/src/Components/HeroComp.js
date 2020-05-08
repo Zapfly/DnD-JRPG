@@ -8,20 +8,22 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 
 const HeroComp = (props) => {
-    console.log(props.heroSprite)
     const name = props.heroInfo.name
-    const healthbar = '200px'
-    const currentHp = props.heroInfo.hp
-    return( 
-        <Container className="text-center h-100">
+    const healthbar = 200
+    const currentHp = (props.heroInfo.maxHp / props.heroInfo.hp) * healthbar
+    return (
+        <Container className="text-center">
             <div>{name}</div>
-            <Image className="img-responsive" src={props.heroInfo.sprite} height={300} ></Image> 
-            <div className= "healthbar" style={{width: `${healthbar}px`}}>
-            <div style = {{}}></div>
-            </div>      
+            <Row className="justify-content-center">
+                <Image className="img-responsive" src={props.heroInfo.sprite} height={300} ></Image>
+            </Row>
+            <Row className="healthbar justify-content-center">
+                <div style={{ width: `${healthbar}px` }}>
+                    <div style={{ width: `${currentHp}px` }}></div>
+                </div>
+            </Row>
         </Container>
     )
-
 }
 
 export default HeroComp;
