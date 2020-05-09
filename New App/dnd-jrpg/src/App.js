@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -8,32 +8,26 @@ import { Arena } from './scripts/combat.js';
 import Herc from './images/Herccolored.png';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
+import { Container, Row, Col } from 'react-bootstrap';
 
-
-const arena = new Arena()    
+const arena = new Arena()
 arena.createHero("Hercules", 30, 20, Herc)
 arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 
-
-
 const App = () => {
   const [selectedMonster, setSelectedMonster] = useState(null)
 
   const monsters = arena.monsters.map((monster, i) => {
-    return <MonsterComp 
-    monsterInfo={monster}
-    key={monster.key}
-    index={i}
-    selectedMonster={selectedMonster}
-    setSelectedMonster={setSelectedMonster}
-    monsters={arena.monsters}
+    return <MonsterComp
+      monsterInfo={monster}
+      key={monster.key}
+      index={i}
+      selectedMonster={selectedMonster}
+      setSelectedMonster={setSelectedMonster}
+      monsters={arena.monsters}
     />
   })
 
@@ -42,67 +36,50 @@ const App = () => {
     arena.attack(selectedMonster)
     console.log(selectedMonster.hp)
     // Combat Log
-    
+
   }
 
-  
   useEffect(() => {
 
   }, [])
+
   return (
-    <Container fluid style={{ height: "100vh" }}>
-      <Row style={{height: "10%"}}>
-        <Col className="text-center" style={{fontSize: "6vh", fontWeight: "bold" }}>Monster Dungeon</Col>
-      </Row>
-      <Row className="battle-field justify-content-center" style={{height: "60%"}}>
-        <Col md={5} className="player-side">
-          < HeroComp 
-          heroInfo = {arena.combatants[0]}
-          heroSprite = {arena.combatants[0].sprite}
-          />
-        </Col>
-        <Col md={5} className="monster-side">
-          <Row>
+    <div className="container-fluid text-center" fluid style={{ height: "100vh" }}>
+      <div className="row header border border-secondary justify-content-center" style={{ height: "10vh" }}>
+        <h1 className="font-weight-bold my-auto">Monster Dungeon</h1>
+      </div>
+      <div className="row battle-field" style={{ height: "60vh" }}>
+        <div className="container-fluid col-md-6 col-sm-12 player-side p-0 m-0 my-auto">
+          <div className="row m-0 p-0 justify-content-center text-center">
+            < HeroComp
+              heroInfo={arena.combatants[0]}
+            />
+          </div>
+        </div>
+        <div className="container col-md-6 col-sm-12 monster-side p-0 m-0 my-auto">
+          <div className="row p-0 m-0 justify-content-center text-center">
             {monsters}
-          </Row>
-        </Col>
-      </Row>
-      <Row className="interface text-center justify-content-center" style={{height: "28%"}}>
-        <Col lg={3} className="commands">
-          <Container style={{height: "98%"}}>
-            <button onClick= {attack}>Attack</button>
-          </Container>
-        </Col>
-        <Col lg={8} className="combat-log">
-          Combat Log
-        </Col>
-      </Row>
-    </Container>
-
-
-
-
+          </div>
+        </div>
+      </div>
+      <div className="row interface border border-secondary" style={{ height: "30vh" }}>
+        <div className="container-fluid col-md-5 my-auto">
+          <div className="row m-2 p-0 justify-content-center text-center">
+            <div className="commands container-fluid border border-secondary my-auto"  style={{ height: "25vh" }}>
+              <button className="my-auto" onClick={attack}>Attack</button>
+            </div>
+          </div>
+        </div>
+        <div className="container-fluid col-md-7 text-center my-auto">
+          <div className="row m-2 p-0 justify-content-center text-center">
+            <div className="combat-log container-fluid my-auto border border-secondary" style={{ height: "25vh" }}>
+              Combat Log
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default App;
-
-
-// render() {
-//   const cityList = this.context.cities.cities.map((city, i) => {
-//       return <CityCard
-//           key={i}
-//           city={city}
-//           index={i}
-//           handleDelete={this.props.handleDelete}
-//           handleWarning={this.props.handleWarning}
-//           cityChecker={this.props.cityChecker}
-//           cityInfoSelector={this.props.cityInfoSelector}
-//       />
-//   })
-
-//   <input
-//   type="button"
-//   value="Moved In"
-//   className="city-button city-card-elements"
-//   onClick={() => this.handleMovedIn(this.props.index)} />
