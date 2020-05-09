@@ -16,6 +16,8 @@ arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
+arena.createMonster("Boblin", 2, 20, Gobo)
+arena.createMonster("Boblin", 2, 20, Gobo)
 
 const App = () => {
   const [selectedMonster, setSelectedMonster] = useState(null)

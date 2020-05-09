@@ -7,3 +7,12 @@ div {
 .interface {
     overflow-y: auto;
 }
+
+.monster :hover,
+.hero :hover {
+    cursor: pointer;
+}
+
+.selected {
+    background: rgba(94, 255, 0, 0.5);
+}
