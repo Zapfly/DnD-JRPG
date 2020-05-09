@@ -8,7 +8,6 @@ import { Arena } from './scripts/combat.js';
 import Herc from './images/Herccolored.png';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
 
-import { Container, Row, Col } from 'react-bootstrap';
 
 const arena = new Arena()
 arena.createHero("Hercules", 30, 20, Herc)

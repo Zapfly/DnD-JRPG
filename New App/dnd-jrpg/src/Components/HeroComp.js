@@ -1,11 +1,4 @@
 import React from 'react';
-// import Herc from '../images/Herccolored.png';
-
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
-import Image from 'react-bootstrap/Image';
 
 const HeroComp = (props) => {
     const name = props.heroInfo.name
