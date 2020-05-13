@@ -48,7 +48,7 @@ const App = () => {
   
   useEffect(() => {
 
-  }, [])
+  })
   return (
     <Container fluid style={{ height: "100vh" }}>
       <Row style={{height: "10%"}}>

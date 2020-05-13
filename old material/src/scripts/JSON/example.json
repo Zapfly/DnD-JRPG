@@ -25,7 +25,10 @@
 "challenge_rating":0.25,
 "special_abilities":[{"attack_bonus":0,"desc":"If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5+the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead.",
 "name":"Undead Fortitude"}],
-"actions":[{"damage_bonus":1,
-"damage_dice":"1d6","attack_bonus":3,
-"desc":"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.",
-"name":"Slam"}],"url":"http://www.dnd5eapi.co/api/monsters/325"}
+"actions":[{
+    "damage_bonus":1,
+    "damage_dice":"1d6",
+    "attack_bonus":3,
+    "desc":"Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.",
+    "name":"Slam"}],
+"url":"http://www.dnd5eapi.co/api/monsters/zombie"}
