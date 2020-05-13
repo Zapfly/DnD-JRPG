@@ -1,8 +1,18 @@
-.App {
-
-}
-
+/* 
 div {
     border: 1px solid black;
-    margin: 2px
+} */
+
+.battle-field,
+.interface {
+    overflow-y: auto;
+}
+
+.monster :hover,
+.hero :hover {
+    cursor: pointer;
+}
+
+.selected {
+    background: rgba(94, 255, 0, 0.5);
 }
