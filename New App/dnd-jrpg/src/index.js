@@ -5,11 +5,16 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 // import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ContextProvider, AppContext } from './AppContext.js';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <ContextProvider>
+    <React.StrictMode>
+      <AppContext.Consumer>
+        <App />
+      </AppContext.Consumer>
+    </React.StrictMode>
+  </ContextProvider>,
   document.getElementById('root')
 );
 

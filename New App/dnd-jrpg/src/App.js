@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AppContext } from './AppContext.js';
 
 import HeroComp from './Components/HeroComp.js';
 import MonsterComp from './Components/MonsterComp.js';
@@ -19,23 +20,23 @@ arena.createMonster("Boblin", 2, 20, Gobo)
 arena.createMonster("Boblin", 2, 20, Gobo)
 
 const App = () => {
-  const [selectedMonster, setSelectedMonster] = useState(null)
+  const appContext = React.useContext(AppContext)
 
   const monsters = arena.monsters.map((monster, i) => {
     return <MonsterComp
       monsterInfo={monster}
       key={monster.key}
       index={i}
-      selectedMonster={selectedMonster}
-      setSelectedMonster={setSelectedMonster}
+      selectedMonster={appContext.selectedMonster}
+      setSelectedMonster={appContext.setSelectedMonster}
       monsters={arena.monsters}
     />
   })
 
   const attack = () => {
-    console.log(selectedMonster)
-    arena.attack(selectedMonster)
-    console.log(selectedMonster.hp)
+    console.log(appContext.selectedMonster)
+    arena.attack(appContext.selectedMonster)
+    console.log(appContext.selectedMonster.hp)
     // Combat Log
 
   }
