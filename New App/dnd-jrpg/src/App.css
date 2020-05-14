@@ -16,3 +16,7 @@ div {
 .selected {
     background: rgba(94, 255, 0, 0.5);
 }
+
+.not-selected {
+    background: red;
+}

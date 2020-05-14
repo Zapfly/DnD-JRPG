@@ -28,6 +28,7 @@ export class Arena {// different for each encounter
         this.combatants = []; //...this.heroes, ...this.monsters
         this.monsters = [];
         this.heroes = [];
+        this.currentMonster = null;
 
         this.counter = 0;
         this.currentTurn = 0;
@@ -82,6 +83,12 @@ export class Arena {// different for each encounter
             
             
         } else {return condition}
+    }
+
+    selectMonster(monster) {
+        console.log(monster)
+        return this.currentMonster = monster;
+        console.log(this.currentMonster)
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {

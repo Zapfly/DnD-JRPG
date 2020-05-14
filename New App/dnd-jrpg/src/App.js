@@ -5,47 +5,52 @@ import { AppContext } from './AppContext.js';
 
 import HeroComp from './Components/HeroComp.js';
 import MonsterComp from './Components/MonsterComp.js';
-import { Arena } from './scripts/combat.js';
-import Herc from './images/Herccolored.png';
-import Gobo from './images/250px-Chuffy_Lickwound.jpg';
+// import { Arena } from './scripts/combat.js';
 
 
-const arena = new Arena()
-arena.createHero("Hercules", 30, 20, Herc)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
 
 const App = () => {
+
+  const [stateToggle, setStateToggle] = useState(true)
+  const toggle = () =>{setStateToggle(!stateToggle)}
+
   const appContext = React.useContext(AppContext)
 
-  const monsters = arena.monsters.map((monster, i) => {
+
+
+
+
+
+  const monsters = appContext.arena.monsters.map((monster, i) => {
+
     return <MonsterComp
+      toggle = {toggle}
       monsterInfo={monster}
       key={monster.key}
       index={i}
-      selectedMonster={appContext.selectedMonster}
-      setSelectedMonster={appContext.setSelectedMonster}
-      monsters={arena.monsters}
+      // selectedMonster={appContext.selectedMonster}
+      // setSelectedMonster={appContext.setSelectedMonster}
+      monsters={appContext.arena.monsters}
     />
   })
 
+
   const attack = () => {
-    console.log(appContext.selectedMonster)
-    arena.attack(appContext.selectedMonster)
-    console.log(appContext.selectedMonster.hp)
+    console.log(appContext.arena.currentMonster)
+    appContext.arena.attack(appContext.arena.currentMonster)
+    console.log(appContext.arena.currentMonster.hp)
     // Combat Log
+
 
   }
 
-  useEffect(() => {
 
-  })
+  useEffect(() => {
+    
+
+  }, [])
   return (
-    <div className="container-fluid text-center" fluid style={{ height: "100vh" }}>
+    <div className="container-fluid text-center" style={{ height: "100vh" }}>
       <div className="row header border border-secondary justify-content-center" style={{ height: "10vh" }}>
         <h1 className="font-weight-bold my-auto">Monster Dungeon</h1>
       </div>
@@ -53,7 +58,7 @@ const App = () => {
         <div className="container-fluid col-md-6 col-sm-12 player-side p-0 m-0 my-auto">
           <div className="row m-0 p-0 justify-content-center text-center">
             < HeroComp
-              heroInfo={arena.combatants[0]}
+              heroInfo={appContext.arena.combatants[0]}
             />
           </div>
         </div>
