@@ -1,52 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AppContext } from './AppContext.js';
 
 import HeroComp from './Components/HeroComp.js';
 import MonsterComp from './Components/MonsterComp.js';
-import { Arena } from './scripts/combat.js';
 import Herc from './images/Herccolored.png';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
 
 
-const arena = new Arena()
-arena.createHero("Hercules", 30, 20, Herc)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
-arena.createMonster("Boblin", 2, 20, Gobo)
 
 const App = () => {
   const appContext = React.useContext(AppContext)
 
-  const monsters = arena.monsters.map((monster, i) => {
+  appContext.arena.createHero("Hercules", 30, 20, Herc);
+  appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  // Boblin index #7, bottom right corner. Test for attack function!
+  const test = appContext.arena.createMonster("Boblin", 2, 20, Gobo);
+  console.log(test)
+
+  const monsters = appContext.arena.monsters.map((monster, i) => {
     return <MonsterComp
       monsterInfo={monster}
       key={monster.key}
       index={i}
-      selectedMonster={appContext.selectedMonster}
-      setSelectedMonster={appContext.setSelectedMonster}
-      monsters={arena.monsters}
+      monsters={appContext.arena.monsters}
     />
   })
 
   const attack = () => {
     console.log(appContext.selectedMonster)
-    arena.attack(appContext.selectedMonster)
-    console.log(appContext.selectedMonster.hp)
-    // Combat Log
-
+    appContext.arena.attack(appContext.selectedMonster)
   }
 
-  useEffect(() => {
-
-  }, [])
-
   return (
-    <div className="container-fluid text-center" fluid style={{ height: "100vh" }}>
+    <div className="container-fluid text-center" style={{ height: "100vh" }}>
       <div className="row header border border-secondary justify-content-center" style={{ height: "10vh" }}>
         <h1 className="font-weight-bold my-auto">Monster Dungeon</h1>
       </div>
@@ -54,7 +46,7 @@ const App = () => {
         <div className="container-fluid col-md-6 col-sm-12 player-side p-0 m-0 my-auto">
           <div className="row m-0 p-0 justify-content-center text-center">
             < HeroComp
-              heroInfo={arena.combatants[0]}
+              heroInfo={appContext.arena.combatants[0]}
             />
           </div>
         </div>

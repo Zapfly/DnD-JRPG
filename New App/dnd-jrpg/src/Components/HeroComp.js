@@ -8,7 +8,7 @@ const HeroComp = (props) => {
         <div className="hero container col-sm-6 text-center justify-content-center m-0 p-2">
             <div className="container p-2 border border-secondary">
                 <p className="font-weight-bold">{name}</p>
-                <img className="img-responsive" src={props.heroInfo.sprite} height={300} ></img>
+                <img alt="herc the... jerk?" className="img-responsive" src={props.heroInfo.sprite} height={300} ></img>
                 <div className="container" style={{ width: `${healthbar}px` }}>
                     <div style={{ width: `${currentHp}px` }}></div>
                 </div>
