@@ -1,54 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AppContext } from './AppContext.js';
 
 import HeroComp from './Components/HeroComp.js';
 import MonsterComp from './Components/MonsterComp.js';
-// import { Arena } from './scripts/combat.js';
-
 
 
 const App = () => {
-
-  const [stateToggle, setStateToggle] = useState(true)
-  const toggle = () =>{setStateToggle(!stateToggle)}
-
-  const appContext = React.useContext(AppContext)
-
-
-
-
-
+  const appContext = React.useContext(AppContext);
 
   const monsters = appContext.arena.monsters.map((monster, i) => {
-
     return <MonsterComp
-      toggle = {toggle}
       monsterInfo={monster}
       key={monster.key}
       index={i}
-      // selectedMonster={appContext.selectedMonster}
-      // setSelectedMonster={appContext.setSelectedMonster}
       monsters={appContext.arena.monsters}
     />
   })
 
-
   const attack = () => {
-    console.log(appContext.arena.currentMonster)
-    appContext.arena.attack(appContext.arena.currentMonster)
-    console.log(appContext.arena.currentMonster.hp)
-    // Combat Log
-
-
+    console.log(appContext.arena.selectedMonster);
+    appContext.arena.attack(appContext.arena.selectedMonster);
+    appContext.arena.setSelectedMonster(null);
+    appContext.setSelectedMonster(null);
+    console.log(appContext.arena.selectedMonster);
   }
 
-
-  useEffect(() => {
-    
-
-  }, [])
   return (
     <div className="container-fluid text-center" style={{ height: "100vh" }}>
       <div className="row header border border-secondary justify-content-center" style={{ height: "10vh" }}>
@@ -71,7 +49,7 @@ const App = () => {
       <div className="row interface border border-secondary" style={{ height: "30vh" }}>
         <div className="container-fluid col-md-5 my-auto">
           <div className="row m-2 p-0 justify-content-center text-center">
-            <div className="commands container-fluid border border-secondary my-auto"  style={{ height: "25vh" }}>
+            <div className="commands container-fluid border border-secondary my-auto" style={{ height: "25vh" }}>
               <button className="my-auto" onClick={attack}>Attack</button>
             </div>
           </div>

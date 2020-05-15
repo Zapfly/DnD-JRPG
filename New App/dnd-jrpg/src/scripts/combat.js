@@ -1,3 +1,4 @@
+  
 export class Combatant {
 
     constructor(key, name, atk, hp, sprite) {
@@ -28,7 +29,7 @@ export class Arena {// different for each encounter
         this.combatants = []; //...this.heroes, ...this.monsters
         this.monsters = [];
         this.heroes = [];
-        this.currentMonster = null;
+        this.selectedMonster = null;
 
         this.counter = 0;
         this.currentTurn = 0;
@@ -36,7 +37,7 @@ export class Arena {// different for each encounter
 
     createHero(name, atk, hp, sprite) {
         this.counter++
-        const newHero = new Hero (this.counter, name, atk, hp, sprite);
+        const newHero = new Hero(this.counter, name, atk, hp, sprite);
         this.heroes.push(newHero);
         this.combatants = [...this.heroes, ...this.monsters]
         return newHero;
@@ -44,7 +45,7 @@ export class Arena {// different for each encounter
 
     createMonster(name, atk, hp, sprite) {
         this.counter++
-        const newMonster = new Monster (this.counter, name, atk, hp, sprite);
+        const newMonster = new Monster(this.counter, name, atk, hp, sprite);
         this.monsters.push(newMonster);
         this.combatants = [...this.heroes, ...this.monsters]
 
@@ -52,18 +53,21 @@ export class Arena {// different for each encounter
     }
 
     victoryCheck() {
-        const heroVictory = this.monsters.every( monster => monster.hp <= 0 )
-        const monsterVictory = this.heroes.every( hero => hero.hp <= 0 )
-        
+        const heroVictory = this.monsters.every(monster => monster.hp <= 0)
+        const monsterVictory = this.heroes.every(hero => hero.hp <= 0)
+        // eslint-disable-next-line
         if (heroVictory == true) {
+            this.monsters = []
+            this.combatants = [...this.heroes, ...this.monsters]
             return "victory"
+            // eslint-disable-next-line
         } else if (monsterVictory == true) {
             return "defeat"
-        } else {return "contested"} 
+        } else { return "contested" }
     }
 
     turnIncrement() {
-        if(this.combatants[this.currentTurn].hp <= 0) {
+        if (this.combatants[this.currentTurn].hp <= 0) {
             this.currentTurn = this.currentTurn + 1
             this.turnIncrement()
         }
@@ -71,7 +75,7 @@ export class Arena {// different for each encounter
 
     cycleTurn() {
         const condition = this.victoryCheck()
-        if (condition === "contested"){
+        if (condition === "contested") {
 
             if (this.currentTurn < this.combatants.length - 1) {
                 this.currentTurn = this.currentTurn + 1
@@ -80,21 +84,27 @@ export class Arena {// different for each encounter
 
             this.turnIncrement()
             return condition
-            
-            
-        } else {return condition}
-    }
 
-    selectMonster(monster) {
-        console.log(monster)
-        return this.currentMonster = monster;
-        console.log(this.currentMonster)
+
+        } else { return condition }
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {
-        if (attacker != victim && victim.hp > 0) {
-            victim.hpLoss(attacker.atk)
-        }
+        if (victim) {
+            // eslint-disable-next-line
+            if (attacker != victim && victim.hp > 0) {
+                victim.hpLoss(attacker.atk)
+                this.cycleTurn()
+            }
+        } 
+        else return
+    }
+
+    setSelectedMonster(monster) {
+        console.log(monster)
+        this.selectedMonster = monster;
+        console.log(this.selectedMonster)
+        return this.selectedMonster;
     }
 }
 
