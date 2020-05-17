@@ -21,7 +21,7 @@ export class Combatant {
     hpGained(life) {
         this.hp = this.hp + life;
     }
-}
+};
 
 export class Arena {// different for each encounter
 
@@ -29,7 +29,6 @@ export class Arena {// different for each encounter
         this.combatants = []; //...this.heroes, ...this.monsters
         this.monsters = [];
         this.heroes = [];
-        this.selectedMonster = null;
 
         this.counter = 0;
         this.currentTurn = 0;
@@ -80,11 +79,9 @@ export class Arena {// different for each encounter
             if (this.currentTurn < this.combatants.length - 1) {
                 this.currentTurn = this.currentTurn + 1
             }
-            else this.currentTurn = 0;
-
+            else this.currentTurn = 0
             this.turnIncrement()
             return condition
-
 
         } else { return condition }
     }
@@ -99,25 +96,18 @@ export class Arena {// different for each encounter
         } 
         else return
     }
-
-    setSelectedMonster(monster) {
-        console.log(monster)
-        this.selectedMonster = monster;
-        console.log(this.selectedMonster)
-        return this.selectedMonster;
-    }
-}
+};
 
 export class Hero extends Combatant { // instantiate combatant and change to hero or monster?
     constructor(...args) {
         super(...args)
         this.hero = true;
     }
-}
+};
 
 export class Monster extends Combatant { // instantiate combatant and change to hero or monster?
     constructor(...args) {
         super(...args)
         this.hero = false;
     }
-}
+};

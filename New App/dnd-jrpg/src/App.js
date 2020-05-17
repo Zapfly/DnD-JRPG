@@ -20,11 +20,9 @@ const App = () => {
   })
 
   const attack = () => {
-    console.log(appContext.arena.selectedMonster);
     appContext.arena.attack(appContext.arena.selectedMonster);
     appContext.arena.setSelectedMonster(null);
     appContext.setSelectedMonster(null);
-    console.log(appContext.arena.selectedMonster);
   }
 
   return (

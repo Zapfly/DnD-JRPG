@@ -44,7 +44,6 @@ test("Who's turn is it anyway?", () => {
     colosseum.createMonster("Boblin", 30, 20, hero)
     colosseum.createMonster("Boblin", 30, 20, hero)
 
-
     expect(colosseum.currentTurn).toEqual(0)
     colosseum.cycleTurn()
     expect(colosseum.currentTurn).toEqual(1)
