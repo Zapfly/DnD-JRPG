@@ -1,4 +1,4 @@
-import { Combatant, Arena } from "./combat.js"
+import { Arena } from "./combat.js"
 import hero from "../images/Herccolored.png"
 
 test("Making a hero", () => {
@@ -20,6 +20,7 @@ test("attacking enemies", () => {
 
     colosseum.createHero("Hercules", 30, 20, hero)
     colosseum.createMonster("Boblin", 30, 20, hero)
+    colosseum.createMonster("Boblin2", 30, 20, hero)
 
     expect(colosseum.combatants[0].name).toEqual("Hercules")
     expect(colosseum.combatants[1].name).toEqual("Boblin")
@@ -55,25 +56,35 @@ test("Who's turn is it anyway?", () => {
 })
 
 test("Who won?", () => {
-    const colosseum = new Arena();
-    colosseum.createHero("Hercules", 30, 20, hero)
-    colosseum.createMonster("Boblin", 1, 20, hero)
-    colosseum.createMonster("Boblin", 1, 20, hero)
-    expect(colosseum.combatants.length).toEqual(3)    
-    expect(colosseum.monsters.length).toEqual(2)    
-    expect(colosseum.heroes.length).toEqual(1)    
+    const arena1 = new Arena();
+    arena1.createHero("Hercules", 30, 20, hero)
+    arena1.createMonster("Boblin", 1, 20, hero)
+    arena1.createMonster("Boblin", 1, 20, hero)
+    expect(arena1.combatants.length).toEqual(3)    
+    expect(arena1.monsters.length).toEqual(2)    
+    expect(arena1.heroes.length).toEqual(1)    
 
-    colosseum.attack(colosseum.combatants[1])
-    expect(colosseum.victoryCheck()).toEqual("contested")
-    expect(colosseum.cycleTurn()).toEqual("contested")
-    expect(colosseum.currentTurn).toEqual(2)
+    arena1.attack(arena1.combatants[1])
+    expect(arena1.victoryCheck()).toEqual("contested")
+    expect(arena1.victoryCheck()).toEqual("contested")
+    expect(arena1.currentTurn).toEqual(2)
 
-    colosseum.attack(colosseum.combatants[0])
-    expect(colosseum.cycleTurn()).toEqual("contested")
-    colosseum.attack(colosseum.combatants[2])
-    expect(colosseum.cycleTurn()).toEqual("victory")
+    const arena2 = new Arena();
+    arena2.createHero("Hercules", 30, 20, hero)
+    arena2.createMonster("Boblin", 1, 20, hero)
+    arena2.createMonster("Boblin", 1, 20, hero)
 
-    colosseum.createMonster("Super Boblin", 500, 500, hero)
-    colosseum.attack(colosseum.combatants[0], colosseum.combatants[3])
-    expect(colosseum.cycleTurn()).toEqual("defeat")    
+    arena2.attack(arena2.combatants[1])
+    expect(arena2.victoryCheck()).toEqual("contested")
+    arena2.attack(arena2.combatants[0])
+    expect(arena2.victoryCheck()).toEqual("contested")
+    arena2.attack(arena2.combatants[2])
+    expect(arena2.victoryCheck()).toEqual("victory")
+
+    const arena3 = new Arena();
+    arena3.createHero("Hercules", 30, 20, hero)
+    arena3.createMonster("Super Boblin", 500, 500, hero)
+    
+    arena3.attack(arena3.combatants[0], arena3.combatants[1])
+    expect(arena3.victoryCheck()).toEqual("defeat")    
 })

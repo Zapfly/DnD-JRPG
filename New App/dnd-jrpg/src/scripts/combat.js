@@ -48,7 +48,6 @@ export class Arena {// different for each encounter
         const newMonster = new Monster(this.counter, name, atk, hp, sprite);
         this.monsters.push(newMonster);
         this.combatants = [...this.heroes, ...this.monsters]
-
         return newMonster;
     }
 
@@ -63,7 +62,8 @@ export class Arena {// different for each encounter
             // eslint-disable-next-line
         } else if (monsterVictory == true) {
             return "defeat"
-        } else { return "contested" }
+        } else { 
+            return "contested" }
     }
 
     turnIncrement() {
@@ -95,7 +95,7 @@ export class Arena {// different for each encounter
             if (attacker != victim && victim.hp > 0) {
                 victim.hpLoss(attacker.atk)
                 this.cycleTurn()
-            }
+            } 
         } 
         else return
     }
