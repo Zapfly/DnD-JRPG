@@ -1,4 +1,4 @@
-  
+
 export class Combatant {
 
     constructor(key, name, atk, hp, sprite) {
@@ -61,8 +61,9 @@ export class Arena {// different for each encounter
             // eslint-disable-next-line
         } else if (monsterVictory == true) {
             return "defeat"
-        } else { 
-            return "contested" }
+        } else {
+            return "contested"
+        }
     }
 
     turnIncrement() {
@@ -73,17 +74,11 @@ export class Arena {// different for each encounter
     }
 
     cycleTurn() {
-        const condition = this.victoryCheck()
-        if (condition === "contested") {
-
-            if (this.currentTurn < this.combatants.length - 1) {
-                this.currentTurn = this.currentTurn + 1
-            }
-            else this.currentTurn = 0
-            this.turnIncrement()
-            return condition
-
-        } else { return condition }
+        if (this.currentTurn < this.combatants.length - 1) {
+            this.currentTurn = this.currentTurn + 1
+        }
+        else this.currentTurn = 0
+        this.turnIncrement()
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {
@@ -91,9 +86,8 @@ export class Arena {// different for each encounter
             // eslint-disable-next-line
             if (attacker != victim && victim.hp > 0) {
                 victim.hpLoss(attacker.atk)
-                this.cycleTurn()
-            } 
-        } 
+            }
+        }
         else return
     }
 };

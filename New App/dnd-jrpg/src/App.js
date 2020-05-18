@@ -19,10 +19,31 @@ const App = () => {
     />
   })
 
+  const combatLog = appContext.combatLog.map((message, i) => {
+    return <div key={i}>{`Log ${i}: ${message}`}</div>
+  })
+
   const attack = () => {
-    appContext.arena.attack(appContext.arena.selectedMonster);
-    appContext.arena.setSelectedMonster(null);
-    appContext.setSelectedMonster(null);
+    const arena = appContext.arena;
+    const heroName = arena.combatants[0].name;
+    if (appContext.selectedMonster.hp > 0) {
+      let currentAttacker = arena.combatants[0]
+      let currentVictim = appContext.selectedMonster
+      arena.attack(currentVictim)
+      appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+      appContext.setSelectedMonster(null) 
+      arena.cycleTurn()
+      while (arena.victoryCheck() === "contested" && arena.currentTurn > 0) {
+        let currentAttacker = arena.combatants[arena.currentTurn]
+        let currentVictim = arena.combatants[0]
+        arena.attack(currentVictim)
+        appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+        arena.cycleTurn()
+      }
+      if (arena.victoryCheck() === "contested" && arena.currentTurn === 0) {
+        return appContext.setAttackMessage(`It is your turn, ${heroName}!`);
+      } return appContext.setAttackMessage(arena.victoryCheck());
+    } return appContext.setAttackMessage("The selected monster is dead and cannot be attacked");
   }
 
   return (
@@ -49,13 +70,19 @@ const App = () => {
           <div className="row m-2 p-0 justify-content-center text-center">
             <div className="commands container-fluid border border-secondary my-auto" style={{ height: "25vh" }}>
               <button className="my-auto" onClick={attack}>Attack</button>
+              <div className="attack-message">
+                {appContext.attackMessage}
+              </div>
             </div>
           </div>
         </div>
         <div className="container-fluid col-md-7 text-center my-auto">
           <div className="row m-2 p-0 justify-content-center text-center">
-            <div className="combat-log container-fluid my-auto border border-secondary" style={{ height: "25vh" }}>
+            <div className="combat-log-container container-fluid my-auto border border-secondary" style={{ height: "25vh" }}>
               Combat Log
+              <div className="combat-log">
+                {combatLog}
+              </div>
             </div>
           </div>
         </div>

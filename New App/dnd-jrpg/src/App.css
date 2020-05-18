@@ -20,3 +20,11 @@ div {
 .not-selected {
     background: red;
 }
+
+.attack-message {
+    font-size: 5vh;
+}
+
+.combat-log {
+    overflow: hidden;
+}
