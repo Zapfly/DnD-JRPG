@@ -66,19 +66,14 @@ export class Arena {// different for each encounter
         }
     }
 
-    turnIncrement() {
-        if (this.combatants[this.currentTurn].hp <= 0) {
-            this.currentTurn = this.currentTurn + 1
-            this.turnIncrement()
-        }
-    }
-
     cycleTurn() {
         if (this.currentTurn < this.combatants.length - 1) {
             this.currentTurn = this.currentTurn + 1
         }
         else this.currentTurn = 0
-        this.turnIncrement()
+        while (this.combatants[this.currentTurn].hp <= 0) {
+            this.currentTurn = this.currentTurn + 1
+        }
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {
