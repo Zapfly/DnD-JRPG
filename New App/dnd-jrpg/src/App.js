@@ -26,6 +26,7 @@ const App = () => {
   const attack = () => {
     const arena = appContext.arena;
     const heroName = arena.combatants[0].name;
+    console.log(arena.combatants)
     if (appContext.selectedMonster.hp > 0) {
       let currentAttacker = arena.combatants[0]
       let currentVictim = appContext.selectedMonster
@@ -79,8 +80,8 @@ const App = () => {
         <div className="container-fluid col-md-7 text-center my-auto">
           <div className="row m-2 p-0 justify-content-center text-center">
             <div className="combat-log-container container-fluid my-auto border border-secondary" style={{ height: "25vh" }}>
-              Combat Log
-              <div className="combat-log">
+              <span className="combat-log-header container-fluid my-auto" style={{ height: "5vh" }}>Combat Log</span>
+              <div className="combat-log overflow-auto" style={{ height: "20vh" }}>
                 {combatLog}
               </div>
             </div>
