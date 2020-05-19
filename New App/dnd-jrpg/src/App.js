@@ -27,24 +27,28 @@ const App = () => {
     const arena = appContext.arena;
     const heroName = arena.combatants[0].name;
     console.log(arena.combatants)
-    if (appContext.selectedMonster.hp > 0) {
-      let currentAttacker = arena.combatants[0]
-      let currentVictim = appContext.selectedMonster
-      arena.attack(currentVictim)
-      appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
-      appContext.setSelectedMonster(null) 
-      arena.cycleTurn()
-      while (arena.victoryCheck() === "contested" && arena.currentTurn > 0) {
-        let currentAttacker = arena.combatants[arena.currentTurn]
-        let currentVictim = arena.combatants[0]
+    if (appContext.selectedMonster) {
+      if (appContext.selectedMonster.hp > 0) {
+        let currentAttacker = arena.combatants[0]
+        let currentVictim = appContext.selectedMonster
         arena.attack(currentVictim)
         appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+        appContext.setSelectedMonster(null)
         arena.cycleTurn()
-      }
-      if (arena.victoryCheck() === "contested" && arena.currentTurn === 0) {
-        return appContext.setAttackMessage(`It is your turn, ${heroName}!`);
-      } return appContext.setAttackMessage(arena.victoryCheck());
-    } return appContext.setAttackMessage("The selected monster is dead and cannot be attacked");
+        while (arena.victoryCheck() === "contested" && arena.currentTurn > 0) {
+          let currentAttacker = arena.combatants[arena.currentTurn];
+          let currentVictim = arena.combatants[0];
+          // I think setTimeout would go here?
+          arena.attack(currentVictim);
+          appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+          arena.cycleTurn()
+        }
+        if (arena.victoryCheck() === "contested" && arena.currentTurn === 0) {
+          return appContext.setAttackMessage(`It is your turn, ${heroName}!`);
+        } return appContext.setAttackMessage(arena.victoryCheck());
+      } return appContext.setAttackMessage("The selected monster is dead and cannot be attacked");
+    }
+    else return
   }
 
   return (
