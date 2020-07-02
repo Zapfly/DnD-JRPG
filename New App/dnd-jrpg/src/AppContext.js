@@ -10,18 +10,64 @@ export const AppContext = React.createContext();
 
 const arena = new Arena();
 const combatLog = [];
+const levels = 
+    { 
+        level1: [
+            {
+                name:'Boblin 0',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },{
+                name:'Boblin 1',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },{
+                name:'Boblin 2',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },{
+                name:'Boblin 3',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },
+            {
+                name:'Boblin 4',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },
+            {
+                name:'Boblin 5',
+                atk: 2,
+                hp: 40,
+                sprite: Gobo
+            },
+        ],
+        level2: [
+
+        ]
+    }
+
 
 export const ContextProvider = () => {
     const [selectedMonster, setSelectedMonster] = useState(null);
     const [attackMessage, setAttackMessage] = useState("");
 
     const [initFetch, setInitFetch] = useState(false);
+    const [currentLevel, setCurrentLevel] = useState(levels.level1);
 
     if (initFetch === false) {
         arena.createHero("Hercules", 30, 40, Herc);
-        for (let i = 0; i < 6; i++) {
-            arena.createMonster(`Boblin ${i}`, 2, 40, Gobo);
-        }
+        currentLevel.forEach(i => {
+            arena.createMonster(i.name, i.atk, i.hp, i.sprite)
+        })
+        // for (let i = 0; i < 6; i++) {
+        //     arena.createMonster(`Boblin ${i}`, 2, 40, Gobo);
+        // }
         setInitFetch(true);
     }
 
@@ -38,7 +84,9 @@ export const ContextProvider = () => {
                 setSelectedMonster: setSelectedMonster,
                 attackMessage: attackMessage,
                 setAttackMessage: setAttackMessage,
-                addToLog: addToLog
+                currentLevel: currentLevel,
+                setCurrentLevel: setCurrentLevel,
+                addToLog: addToLog,
             }}>
             <App />
         </AppContext.Provider>

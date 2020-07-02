@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { AppContext } from './AppContext.js';
+import { AppContext } from './AppContext';
 
-import HeroComp from './Components/HeroComp.js';
-import MonsterComp from './Components/MonsterComp.js';
+import HeroComp from './Components/HeroComp/HeroComp.js';
+import MonsterComp from './Components/MonsterComp/MonsterComp.js';
 
 
 const App = () => {
@@ -52,45 +51,33 @@ const App = () => {
   }
 
   return (
-    <div className="container-fluid text-center" style={{ height: "100vh" }}>
-      <div className="row header border border-secondary justify-content-center" style={{ height: "10vh" }}>
-        <h1 className="font-weight-bold my-auto">Monster Dungeon</h1>
+    <div className="main-app">
+      <div className="app-header-container">
+        <h1 className="app-header">Monster Dungeon</h1>
       </div>
-      <div className="row battle-field" style={{ height: "60vh" }}>
-        <div className="container-fluid col-md-6 col-sm-12 player-side p-0 m-0 my-auto">
-          <div className="row m-0 p-0 justify-content-center text-center">
-            < HeroComp
-              heroInfo={appContext.arena.combatants[0]}
-            />
-          </div>
+      <div className="battle-field">
+        <div className="hero-container">
+          < HeroComp
+            heroInfo={appContext.arena.combatants[0]}
+          />
         </div>
-        <div className="container col-md-6 col-sm-12 monster-side p-0 m-0 my-auto">
-          <div className="row p-0 m-0 justify-content-center text-center">
+        <div className="monster-container">
             {monsters}
-          </div>
         </div>
       </div>
-      <div className="row interface border border-secondary" style={{ height: "30vh" }}>
-        <div className="container-fluid col-md-5 my-auto">
-          <div className="row m-2 p-0 justify-content-center text-center">
-            <div className="commands container-fluid border border-secondary my-auto" style={{ height: "25vh" }}>
+      <div id="userDisplay" >
+        <div id="commands">
               <button className="my-auto" onClick={attack}>Attack</button>
               <div className="attack-message">
                 {appContext.attackMessage}
               </div>
-            </div>
-          </div>
         </div>
-        <div className="container-fluid col-md-7 text-center my-auto">
-          <div className="row m-2 p-0 justify-content-center text-center">
-            <div className="combat-log-container container-fluid my-auto border border-secondary" style={{ height: "25vh" }}>
-              <span className="combat-log-header container-fluid my-auto" style={{ height: "5vh" }}>Combat Log</span>
-              <div className="combat-log overflow-auto" style={{ height: "20vh" }}>
+            <div id="combatLogContainer">
+              <span id="combatLogHeader" >Combat Log</span>
+              <div id="combatLog" >
                 {combatLog}
               </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   );
