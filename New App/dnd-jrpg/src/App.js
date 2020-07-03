@@ -19,7 +19,8 @@ const App = () => {
   })
 
   const combatLog = appContext.combatLog.map((message, i) => {
-    return <div key={i}>{`Log ${i}: ${message}`}</div>
+    const [logEntry, givenAttr] = message
+    return <div key={i} className={givenAttr} >{`Log ${i}: ${logEntry}`}</div>
   })
 
   const attack = () => {
@@ -31,7 +32,7 @@ const App = () => {
         let currentAttacker = arena.combatants[0]
         let currentVictim = appContext.selectedMonster
         arena.attack(currentVictim)
-        appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+        appContext.addToLog([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'hero-attack'])
         appContext.setSelectedMonster(null)
         arena.cycleTurn()
         while (arena.victoryCheck() === "contested" && arena.currentTurn > 0) {
@@ -39,13 +40,13 @@ const App = () => {
           let currentVictim = arena.combatants[0];
           // I think setTimeout would go here?
           arena.attack(currentVictim);
-          appContext.addToLog(`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`)
+          appContext.addToLog([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'monster-attack'])
           arena.cycleTurn()
         }
         if (arena.victoryCheck() === "contested" && arena.currentTurn === 0) {
-          return appContext.setAttackMessage(`It is your turn, ${heroName}!`);
-        } return appContext.setAttackMessage(arena.victoryCheck());
-      } return appContext.setAttackMessage("The selected monster is dead and cannot be attacked");
+          return appContext.addToLog([`It is your turn, ${heroName}!`, 'turn-message']);
+        } return appContext.addToLog([arena.victoryCheck(), 'victory-check-message']);
+      } return appContext.addToLog(["The selected monster is dead and cannot be attacked", "bad-selection"]);
     }
     else return
   }
@@ -68,9 +69,6 @@ const App = () => {
       <div id="userDisplay" >
         <div id="commands">
               <button className="my-auto" onClick={attack}>Attack</button>
-              <div className="attack-message">
-                {appContext.attackMessage}
-              </div>
         </div>
             <div id="combatLogContainer">
               <span id="combatLogHeader" >Combat Log</span>

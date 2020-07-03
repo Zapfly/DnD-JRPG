@@ -2,7 +2,8 @@
     width: fit-content;
 }
 .heroImg {
-    height: 300px;
+    width: 15vw;
+    max-width: 15vh;
 }
 
 .maxHealthbar{

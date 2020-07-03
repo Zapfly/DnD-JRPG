@@ -6,8 +6,7 @@ const MonsterComp = (props) => {
     const appContext = React.useContext(AppContext)
 
     const name = props.monsterInfo.name;
-    const healthbar = 100;
-    const currentHp = (props.monsterInfo.hp / props.monsterInfo.maxHp) * healthbar;
+    const currentHp = (props.monsterInfo.hp / props.monsterInfo.maxHp) * 100;
 
     const handleClick = () => {
         appContext.setSelectedMonster(props.monsterInfo);

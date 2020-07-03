@@ -1,6 +1,7 @@
 .monsterImg {
-    height: 150px;
+    width: 15vw;
     transform: scaleX(-1);
+    max-width: 15vh;
 }
 
 .maxHealthbar{
