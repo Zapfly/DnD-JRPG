@@ -89,8 +89,7 @@ export const ContextProvider = (props) => {
                 setCurrentLevel,
                 addToLog,
             }}>
-                <CombatComp />
-                {/* {props.children} */}
+                {props.children}
         </AppContext.Provider>
     )
 }

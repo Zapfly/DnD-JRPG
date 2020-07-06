@@ -16,11 +16,7 @@ import MonsterComp from './Components/MonsterComp/MonsterComp';
 
 test('renders learn react link', () => {
   const { getByText } = render(
-    <ContextProvider>
-      <AppContext.Consumer>
         <App />
-      </AppContext.Consumer>
-    </ContextProvider>
   );
   const linkElement = getByText(/Monster Dungeon/i);
   expect(linkElement).toBeInTheDocument();
@@ -36,41 +32,51 @@ test('renders HeroComp', () => {
   expect(screen.getByRole('playerCharacter')).toHaveTextContent('Hercules')
 })
 
-// test('render MonsterComp', () => {
-//   const arena = new Arena();
-//   arena.createMonster("Boblin", 1, 1, Gobo)
-//   const appContext = React.useContext(AppContext);
-//   const testLevel = 
-//     [
-//       {
-//         name:'Boblin 0',
-//         atk: 2,
-//         hp: 40,
-//         sprite: Gobo
-//       },
-//     ]
-//   appContext.currentLevelHandler(testLevel)
+test('render MonsterComp', () => {
+  const arena = new Arena();
+  arena.createMonster("Boblin", 1, 1, Gobo)
+
+  const Monster = render(
+    <ContextProvider >
+        <MonsterComp
+          monsterInfo = {arena.combatants[0]}
+          key={0}
+          index={0}
+          monsters={arena.monsters}
+        />
+    </ContextProvider>
+    )
 
 
+  expect(screen.getByRole('monster')).toHaveTextContent('Boblin')
 
-//   const Monster = render(
-//     <ContextProvider >
-//         {/* <MonsterComp
-//           monsterInfo = {arena.combatants[0]}
-//           key={0}
-//           index={0}
-//           monsters={arena.monsters}
-//         /> */}
-//     </ContextProvider>
-//     )
-
-
-//   expect(screen.getByText('Boblin 0')).toHaveTextContent('Boblin 0')
-
-// })
+})
 
 test('renders Monster array', () => {
   const arena = new Arena();
   arena.createMonster("Boblin", 1, 1, Gobo)
+
+  const testLevel = 
+  [
+    {
+      name:'Boblin 0',
+      atk: 2,
+      hp: 40,
+      sprite: Gobo
+    },
+    {
+      name:'Boblin 1',
+      atk: 2,
+      hp: 40,
+      sprite: Gobo
+    },
+    {
+      name:'Boblin 2',
+      atk: 2,
+      hp: 40,
+      sprite: Gobo
+    },
+  ]
+
 
 })
