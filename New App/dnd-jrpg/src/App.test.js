@@ -37,9 +37,9 @@ test('renders HeroComp', () => {
 })
 
 // test('render MonsterComp', () => {
-//   // const arena = new Arena();
-//   // arena.createMonster("Boblin", 1, 1, Gobo)
-//   // const appContext = React.useContext(AppContext);
+//   const arena = new Arena();
+//   arena.createMonster("Boblin", 1, 1, Gobo)
+//   const appContext = React.useContext(AppContext);
 //   const testLevel = 
 //     [
 //       {
@@ -49,20 +49,18 @@ test('renders HeroComp', () => {
 //         sprite: Gobo
 //       },
 //     ]
-//   // appContext.currentLevelHandler(testLevel)
+//   appContext.currentLevelHandler(testLevel)
 
 
 
 //   const Monster = render(
-//     <ContextProvider value={setCurrentLevel(testLevel)}>
-//       <AppContext.Consumer>
+//     <ContextProvider >
 //         {/* <MonsterComp
 //           monsterInfo = {arena.combatants[0]}
 //           key={0}
 //           index={0}
 //           monsters={arena.monsters}
 //         /> */}
-//       </AppContext.Consumer>
 //     </ContextProvider>
 //     )
 

@@ -5,6 +5,7 @@ import { Arena } from './scripts/combat.js';
 
 import Herc from './images/Herccolored.png';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
+import CombatComp from './Components/CombatComp/CombatComp.js';
 
 export const AppContext = React.createContext();
 
@@ -53,7 +54,7 @@ const levels =
     }
 
 
-export const ContextProvider = () => {
+export const ContextProvider = (props) => {
     const [selectedMonster, setSelectedMonster] = useState(null);
     const [attackMessage, setAttackMessage] = useState("");
 
@@ -78,17 +79,18 @@ export const ContextProvider = () => {
     return (
         <AppContext.Provider
             value={{
-                arena: arena,
-                combatLog: combatLog,
-                selectedMonster: selectedMonster,
-                setSelectedMonster: setSelectedMonster,
-                attackMessage: attackMessage,
-                setAttackMessage: setAttackMessage,
-                currentLevel: currentLevel,
-                setCurrentLevel: setCurrentLevel,
-                addToLog: addToLog,
+                arena,
+                combatLog,
+                selectedMonster,
+                setSelectedMonster,
+                attackMessage,
+                setAttackMessage,
+                currentLevel,
+                setCurrentLevel,
+                addToLog,
             }}>
-            <App />
+                <CombatComp />
+                {/* {props.children} */}
         </AppContext.Provider>
     )
 }
