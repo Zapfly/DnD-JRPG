@@ -62,7 +62,7 @@ const CombatComp = () => {
             heroInfo={appContext.arena.combatants[0]}
           />
         </div>
-        <div className="monster-container">
+        <div id="monsterContainer" className="monster-container" role='monsterContainer'>
             {monsters}
         </div>
       </div>
