@@ -2,7 +2,7 @@ import React from 'react';
 import { /*render, fireEvent, waitFor, */screen } from '@testing-library/react';
 import App from './App';
 import { ContextProvider, AppContext } from './AppContext.js';
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect';
 import HeroComp from './Components/HeroComp/HeroComp';
 import Herc from './images/Herccolored.png';
 import { Arena } from './scripts/combat.js';
@@ -11,6 +11,8 @@ import MonsterComp from './Components/MonsterComp/MonsterComp';
 import CombatComp from './Components/CombatComp/CombatComp';
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from 'react-dom/test-utils';
+
+
 
 describe("App testing block", () => {
   let container = null;
@@ -27,6 +29,8 @@ describe("App testing block", () => {
     unmountComponentAtNode(container);
     container.remove();
     container = null;
+    // document.body.textContent = null;
+  
   });
 
 
@@ -34,12 +38,12 @@ describe("App testing block", () => {
   test('renders learn react link', () => {
     act(()=> {
 
-      const  app  = render(
+      render(
             <App />, container
       )
     })
 
-    const linkElement = getByText(/Monster Dungeon/i);
+    const linkElement = screen.getByText(/Monster Dungeon/i);
     expect(linkElement).toBeInTheDocument();
 
   });
@@ -111,9 +115,8 @@ describe("App testing block", () => {
       },
     ];
 
-    act(()=> {
-      
-      const testApp1 = render(
+    act(()=> {     
+      render(
         <ContextProvider>
           <CombatComp/>
         </ContextProvider>,
@@ -122,7 +125,7 @@ describe("App testing block", () => {
     })
 
     
-    expect(screen.getAllByText('Boblin 0')).toHaveTextContent(['Boblin 0']);
+    expect(screen.getByText('Boblin 0')).toHaveTextContent(['Boblin 0']);
     expect(screen.getByRole('monsterContainer').length).toEqual(3);
   });
 

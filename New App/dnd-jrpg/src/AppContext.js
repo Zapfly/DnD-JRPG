@@ -76,6 +76,10 @@ export const ContextProvider = (props) => {
         combatLog.push(msg);
     }
 
+    const deleteCombatants = () => {
+        arena.combatants = [];
+    }
+
     return (
         <AppContext.Provider
             value={{
@@ -88,6 +92,7 @@ export const ContextProvider = (props) => {
                 currentLevel,
                 setCurrentLevel,
                 addToLog,
+                deleteCombatants,
             }}>
                 {props.children}
         </AppContext.Provider>

@@ -6,7 +6,7 @@ export class Combatant {
         this.name = name;
         this.atk = atk;
         this.hp = hp;
-        this.maxHp = hp
+        this.maxHp = hp;
         this.sprite = sprite;
 
     }
