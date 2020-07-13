@@ -5,8 +5,6 @@ import { AppContext } from '../../AppContext';
 import HeroComp from '../HeroComp/HeroComp.js';
 import MonsterComp from '../MonsterComp/MonsterComp.js';
 
-import Gobo from '../..';
-
 
 
 const CombatComp = () => {

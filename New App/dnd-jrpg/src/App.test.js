@@ -1,5 +1,5 @@
 import React from 'react';
-import { /*render, fireEvent, waitFor, */screen } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import App from './App';
 import { ContextProvider, AppContext } from './AppContext.js';
 import '@testing-library/jest-dom/extend-expect';
@@ -9,7 +9,7 @@ import { Arena } from './scripts/combat.js';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
 import MonsterComp from './Components/MonsterComp/MonsterComp';
 import CombatComp from './Components/CombatComp/CombatComp';
-import { render, unmountComponentAtNode } from "react-dom";
+import { /*render,*/ unmountComponentAtNode } from "react-dom";
 import { act } from 'react-dom/test-utils';
 
 
@@ -29,22 +29,23 @@ describe("App testing block", () => {
     unmountComponentAtNode(container);
     container.remove();
     container = null;
-    // document.body.textContent = null;
-  
+    // document.body.textContent = null; 
   });
 
 
 
   test('renders learn react link', () => {
-    act(()=> {
-
-      render(
-            <App />, container
-      )
+    act(()=> {  
+      const { getByText } = render(
+        <ContextProvider >
+          <CombatComp />
+        </ContextProvider>, container
+    )
+      const linkElement = getByText(/Monster Dungeon/i);
+      expect(linkElement).toBeInTheDocument();
     })
 
-    const linkElement = screen.getByText(/Monster Dungeon/i);
-    expect(linkElement).toBeInTheDocument();
+
 
   });
 
@@ -126,8 +127,15 @@ describe("App testing block", () => {
 
     
     expect(screen.getByText('Boblin 0')).toHaveTextContent(['Boblin 0']);
-    expect(screen.getByRole('monsterContainer').length).toEqual(3);
+    expect(screen.getAllByText("Boblin 1")).toHaveLength(1);
+    expect(screen.getByRole('monsterContainer')).toBeInTheDocument(true);
   });
+
+  test("new Test", () => {
+
+
+
+  })
 
 
 

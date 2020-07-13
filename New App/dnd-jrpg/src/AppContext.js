@@ -62,6 +62,7 @@ export const ContextProvider = (props) => {
     const [currentLevel, setCurrentLevel] = useState(levels.level1);
 
     if (initFetch === false) {
+        arena.monsters = [];
         arena.createHero("Hercules", 30, 40, Herc);
         currentLevel.forEach(i => {
             arena.createMonster(i.name, i.atk, i.hp, i.sprite)
@@ -78,6 +79,12 @@ export const ContextProvider = (props) => {
 
     const deleteCombatants = () => {
         arena.combatants = [];
+    }
+
+    const specifyLevel = (lvl) => {
+        // arena.monsters = [...lvl];
+        setCurrentLevel(lvl);
+        setInitFetch(false);
     }
 
     return (
