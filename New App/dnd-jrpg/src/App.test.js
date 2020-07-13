@@ -25,11 +25,10 @@ describe("App testing block", () => {
 
   afterEach(() => {
     console.log("from afterEach");   
-    // screen.getByRole("monsterContainer").textContent = ""; 
     unmountComponentAtNode(container);
     container.remove();
     container = null;
-    // document.body.textContent = null; 
+
   });
 
 
@@ -37,9 +36,7 @@ describe("App testing block", () => {
   test('renders learn react link', () => {
     act(()=> {  
       const { getByText } = render(
-        <ContextProvider >
-          <CombatComp />
-        </ContextProvider>, container
+          <App />, container
     )
       const linkElement = getByText(/Monster Dungeon/i);
       expect(linkElement).toBeInTheDocument();
@@ -60,10 +57,8 @@ describe("App testing block", () => {
 
     })
 
-    // const Hero = render(<HeroComp
-    //   heroInfo = {arena.combatants[0]}
-    //   />)
-    expect(screen.getByRole('playerCharacter')).toHaveTextContent('Hercules')
+
+    expect(screen.getByRole('playerCharacter')).toBeInTheDocument(true)
   });
 
   test('render MonsterComp', () => {
@@ -86,35 +81,11 @@ describe("App testing block", () => {
     )
 
 
-    expect(screen.getByRole('monster')).toHaveTextContent('Boblin')
+    expect(screen.getByRole('monster')).toBeInTheDocument(true)
 
   });
 
   test('renders Monster array', () => {
-    // const arena2 = new Arena();
-    // arena2.createMonster("Boblin", 1, 1, Gobo)
-
-    const testLevel = 
-    [
-      {
-        name:'Boblin 0',
-        atk: 2,
-        hp: 40,
-        sprite: Gobo
-      },
-      {
-        name:'Boblin 1',
-        atk: 2,
-        hp: 40,
-        sprite: Gobo
-      },
-      {
-        name:'Boblin 2',
-        atk: 2,
-        hp: 40,
-        sprite: Gobo
-      },
-    ];
 
     act(()=> {     
       render(
@@ -126,17 +97,10 @@ describe("App testing block", () => {
     })
 
     
-    expect(screen.getByText('Boblin 0')).toHaveTextContent(['Boblin 0']);
-    expect(screen.getAllByText("Boblin 1")).toHaveLength(1);
+    expect(screen.getAllByRole("monster")).not.toHaveLength(0);
     expect(screen.getByRole('monsterContainer')).toBeInTheDocument(true);
+    expect(screen.getAllByRole('monsterContainer')).toHaveLength(1);
+    
   });
-
-  test("new Test", () => {
-
-
-
-  })
-
-
 
 })
