@@ -18,9 +18,9 @@ export class Combatant {
         }
     }
 
-    hpGained(life) {
-        this.hp = this.hp + life;
-    }
+    // hpGained(life) {
+    //     this.hp = this.hp + life;
+    // }
 };
 
 export class Arena {// different for each encounter
@@ -83,7 +83,6 @@ export class Arena {// different for each encounter
                 victim.hpLoss(attacker.atk)
             }
         }
-        else return
     }
 };
 

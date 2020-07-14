@@ -27,7 +27,6 @@ const CombatComp = () => {
   const attack = () => {
     const arena = appContext.arena;
     const heroName = arena.combatants[0].name;
-    console.log(arena.combatants)
     if (appContext.selectedMonster) {
       if (appContext.selectedMonster.hp > 0) {
         let currentAttacker = arena.combatants[0]
@@ -69,7 +68,7 @@ const CombatComp = () => {
       </div>
       <div id="userDisplay" >
         <div id="commands">
-              <button className="my-auto" onClick={attack}>Attack</button>
+              <button role="AttackButton" className="my-auto" onClick={attack}>Attack</button>
         </div>
             <div id="combatLogContainer">
               <span id="combatLogHeader" >Combat Log</span>

@@ -18,7 +18,7 @@ const MonsterComp = (props) => {
                 <p>{name}</p>
                 <img alt="boblin the goblin" className={styles.monsterImg} src={props.monsterInfo.sprite}  />
                 <div className={styles.maxHealthbar} >
-                    <div className={styles.currentHp} style={{ width: `${currentHp}%`}}></div>
+                    <div id={`HPBar ${props.index}`} className={styles.currentHp} style={{ width: `${currentHp}%`}}></div>
                 </div>
             </div>
         </div>
