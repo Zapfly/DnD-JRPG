@@ -6,11 +6,9 @@ import CombatComp from './Components/CombatComp/CombatComp.js';
 
 const App = () => {
   return (
-
-    /*<ContextProvider>*/
-      
+    <ContextProvider>      
       <CombatComp />
-      /* </ContextProvider> */
+    </ContextProvider>
   );
 }
 
