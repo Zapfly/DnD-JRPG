@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor, screen, getByText, waitForElement } from '@
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { ContextProvider, AppContext } from './AppContext.js';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import HeroComp from './Components/HeroComp/HeroComp';
 import Herc from './images/Herccolored.png';
 import { Arena } from './scripts/combat.js';
@@ -13,7 +13,9 @@ import CombatComp from './Components/CombatComp/CombatComp';
 import { /*render,*/ unmountComponentAtNode } from "react-dom";
 import { act } from 'react-dom/test-utils';
 
-
+// "@testing-library/jest-dom": "^4.2.4",
+//     "@testing-library/react": "^9.5.0",
+//     "@testing-library/user-event": "^7.2.1",
 
 describe("App testing block", () => {
   let container = null;
@@ -29,8 +31,6 @@ describe("App testing block", () => {
     container = null;
 
   });
-
-
 
   test('renders learn react link', () => {
     act(()=> {  
@@ -74,7 +74,6 @@ describe("App testing block", () => {
     }
     )
 
-
     expect(screen.getByRole('monster')).toBeInTheDocument(true)
 
   });
@@ -108,52 +107,60 @@ describe("App testing block", () => {
         );
     })
 
-    expect(screen.getAllByRole("monster")[0].firstChild).not.toHaveClass("selected")
+    expect(screen.getAllByRole("monster")[0]).not.toHaveClass("selected")
     fireEvent.click(
       screen.getAllByRole("monster")[0]
     )
-    expect(screen.getAllByRole("monster")[0].firstChild).toHaveClass("selected")
+    expect(screen.getAllByRole("monster")[0]).toHaveClass("selected")
 
     fireEvent.click(
       screen.getAllByRole("monster")[1]
     )
-    expect(screen.getAllByRole("monster")[0].firstChild).not.toHaveClass("selected")
-    expect(screen.getAllByRole("monster")[1].firstChild).toHaveClass("selected")
+    expect(screen.getAllByRole("monster")[0]).not.toHaveClass("selected")
+    expect(screen.getAllByRole("monster")[1]).toHaveClass("selected")
   })
 
-  // test('attack button calls a function', async () => {
-  //   act(() => {
-  //     render(
-  //       <ContextProvider>
-  //         <CombatComp />
-  //       </ContextProvider>,
-  //       container
-  //     );
-  //   })
-    
-    
-  //   userEvent.click(
-  //     screen.getAllByRole("monster")[0]
-  //     );
+  test('attack button calls a function', async () => {
+    act(() => {
+      render(
+        <ContextProvider>
+          <CombatComp />
+        </ContextProvider>,
+        container
+      );
+    })
+
+    document.getElementById("monster 0").classList.add('selected')
       
-  //   await waitFor(() => {
-  //     expect(screen.getAllByRole("monster")[0].firstChild).toHaveClass("selected")
-  //   })
-  
-  //   await waitFor(() => {
+    expect(screen.getAllByRole("monster")[0]).toHaveClass("selected")
+   
+    expect(document.getElementById('HPBar 0').style._values.width).toEqual('100%')
+    // await waitFor(() => {
+    //   fireEvent.click(
+    //     screen.getAllByRole("monster")[0]
+    //   )  
+    // })
 
-  //     userEvent.click(
-  //       screen.getByRole("AttackButton")
-  //       )          
-        
-  //   })
+    // await waitFor(async () => {
+
+    //   await setTimeout(
+    //     fireEvent.click(
+    //       screen.getByRole("AttackButton")
+    //     ), 3000)
+    // })
+
+    act(() => {
+
       
-  //     // expect(screen.getById('HPBar 1').width).toEqual(1000000000)
+      userEvent.click(
+        screen.getByText("Attack")
+        )
+    })
+
+    expect(document.getElementById('HPBar 0').style._values.width).not.toEqual('100%')
+    // await waitFor(() => {
+    // })
       
-  //     // expect(mockFn).toHaveBeenCalled()
-
-  // })
-
-    
-
+      // expect(mockFn).toHaveBeenCalled()
+  })
 })

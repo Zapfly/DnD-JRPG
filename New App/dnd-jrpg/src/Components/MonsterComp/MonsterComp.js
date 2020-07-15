@@ -13,14 +13,12 @@ const MonsterComp = (props) => {
     }
 
     return (
-        <div role="monster" className="monster" onClick={handleClick}>
-            <div className={ (props.monsterInfo === appContext.selectedMonster ? "selected" : null)}>
+        <div id={`monster ${props.index}`}  role="monster" className={ (props.monsterInfo === appContext.selectedMonster ? "monster selected" : "monster")} onClick={handleClick}>
                 <p>{name}</p>
                 <img alt="boblin the goblin" className={styles.monsterImg} src={props.monsterInfo.sprite}  />
                 <div className={styles.maxHealthbar} >
                     <div id={`HPBar ${props.index}`} className={styles.currentHp} style={{ width: `${currentHp}%`}}></div>
                 </div>
-            </div>
         </div>
     )
 }
