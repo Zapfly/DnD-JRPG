@@ -77,11 +77,9 @@ export class Arena {// different for each encounter
     }
 
     attack(victim, attacker = this.combatants[this.currentTurn]) {
-        if (victim) {
+        if (victim && attacker != victim && victim.hp > 0) {
             // eslint-disable-next-line
-            if (attacker != victim && victim.hp > 0) {
                 victim.hpLoss(attacker.atk)
-            }
         }
     }
 };

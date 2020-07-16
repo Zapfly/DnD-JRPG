@@ -7,10 +7,22 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
   },
+
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**",
+      "!**/index.js",
+      "!**/serviceWorker.js"
+    ]
+  },
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom-fourteen",
+    "test-coverage": "react-scripts test --env=jsdom-fourteen --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

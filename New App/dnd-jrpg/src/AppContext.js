@@ -10,7 +10,7 @@ import CombatComp from './Components/CombatComp/CombatComp.js';
 export const AppContext = React.createContext();
 
 const arena = new Arena();
-const combatLog = [];
+let combatLog = [];
 const levels = 
     { 
         level1: [
@@ -63,14 +63,13 @@ export const ContextProvider = (props) => {
 
     if (initFetch === false) {
         arena.monsters = [];
-        arena.createHero("Hercules", 30, 40, Herc);
+        arena.heroes = [];        
+        combatLog = [];
+        arena.createHero("Hercules", 30, 40, Herc);        
         currentLevel.forEach(i => {
             arena.createMonster(i.name, i.atk, i.hp, i.sprite)
         })
-        // for (let i = 0; i < 6; i++) {
-        //     arena.createMonster(`Boblin ${i}`, 2, 40, Gobo);
-        // }
-        setInitFetch(true);
+        setInitFetch(true);       
     }
 
     const addToLog = (msg) => {

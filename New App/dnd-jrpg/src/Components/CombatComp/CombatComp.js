@@ -27,6 +27,7 @@ const CombatComp = () => {
   const attack = () => {
     const arena = appContext.arena;
     const heroName = arena.combatants[0].name;
+    console.log("attack function called with selected monster", AppContext.selectedMonster)
     if (appContext.selectedMonster) {
       if (appContext.selectedMonster.hp > 0) {
         let currentAttacker = arena.combatants[0]
@@ -72,7 +73,7 @@ const CombatComp = () => {
         </div>
             <div id="combatLogContainer">
               <span id="combatLogHeader" >Combat Log</span>
-              <div id="combatLog" >
+              <div role ='combatLog' id="combatLog" >
                 {combatLog}
               </div>
             </div>
