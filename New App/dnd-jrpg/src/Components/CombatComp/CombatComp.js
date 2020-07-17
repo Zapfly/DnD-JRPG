@@ -21,19 +21,19 @@ const CombatComp = () => {
 
   const combatLog = appContext.combatLog.map((message, i) => {
     const [logEntry, givenAttr] = message
-    return <div key={i} className={givenAttr} >{`Log ${i}: ${logEntry}`}</div>
+    return <div id={`log${i}`} key={i} className={givenAttr} >{`${logEntry}`}</div>
   })
 
   const attack = () => {
     const arena = appContext.arena;
     const heroName = arena.combatants[0].name;
-    console.log("attack function called with selected monster", AppContext.selectedMonster)
+    let logArr = [];
     if (appContext.selectedMonster) {
       if (appContext.selectedMonster.hp > 0) {
         let currentAttacker = arena.combatants[0]
         let currentVictim = appContext.selectedMonster
         arena.attack(currentVictim)
-        appContext.addToLog([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'hero-attack'])
+        logArr.push([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'hero-attack'])
         appContext.setSelectedMonster(null)
         arena.cycleTurn()
         while (arena.victoryCheck() === "contested" && arena.currentTurn > 0) {
@@ -41,15 +41,31 @@ const CombatComp = () => {
           let currentVictim = arena.combatants[0];
           // I think setTimeout would go here?
           arena.attack(currentVictim);
-          appContext.addToLog([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'monster-attack'])
+          logArr.push([`${currentAttacker.name} attacked ${currentVictim.name} for ${currentAttacker.atk} damage!`, 'monster-attack'])
           arena.cycleTurn()
         }
         if (arena.victoryCheck() === "contested" && arena.currentTurn === 0) {
-          return appContext.addToLog([`It is your turn, ${heroName}!`, 'turn-message']);
-        } return appContext.addToLog([arena.victoryCheck(), 'victory-check-message']);
-      } return appContext.addToLog(["The selected monster is dead and cannot be attacked", "bad-selection"]);
+            logArr.push([`It is your turn, ${heroName}!`, 'turn-message']);
+            appContext.addToLog(logArr)
+            return
+
+        } else {
+          logArr.push([arena.victoryCheck(), 'victory-check-message']);
+          appContext.addToLog(logArr);
+          return
+        }
+      } else {
+        logArr.push(["The selected monster is dead and cannot be attacked", "bad-selection"]);
+        appContext.addToLog(logArr);
+        return
+      }
+    } else {
+      logArr.push(['please select a monster before attacking', "bad-selection"])
+      appContext.addToLog(logArr)
+      return
     }
-    else return
+    
+    
   }
 
   return (
