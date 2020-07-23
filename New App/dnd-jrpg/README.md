@@ -66,3 +66,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+activate the virtualenv ./venv/Scripts/activate.ps1
+
+in order to run tests navigate to the server folder and use  python -m pytest test_api.py -v 
