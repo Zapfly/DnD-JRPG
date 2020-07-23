@@ -9,4 +9,23 @@ def test_simplefunc():
 
 def test_answer():
     assert api.func(4) == 5
+#--------------------------------------------------
+def test_getlevel():
+    #http://localhost:5000/level<string:name>
+    pass
 
+def test_gethero():
+    #http://localhost:5000/hero/<name>
+    pass
+
+def test_puthero():
+    #http://localhost:5000/update-hero
+    pass
+
+def test_postuser():
+    #http://localhost:5000/new-user
+    pass
+
+def test_getuser():
+    #http://localhost:5000/user/<name>
+    pass

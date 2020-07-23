@@ -1,22 +1,19 @@
-# from flask import Flask
-# from flask_restful import Resource, Api
-
-# 
-# app = Flask(__name__)
-# api = Api(app)
-
-def simple_func():
-    print("this is a function from api.py")
-    return "this is a function from api.py"
+from flask import Flask
+from flask_restful import Resource, Api
+from users import UserRegister
 
 
-def func(x):
-    return x + 1
-# 
-# class Student(Resource):
-#     def get(self, name):
-#       return {'student':name}
-# 
+app = Flask(__name__)
+api = Api(app)
+
+# api.add_resource(Level, '/level<string:name>')
+# api.add_resource(Hero, '/hero<string:name>')
+api.add_resource(UserRegister, '/new-user') #change to <integer:id>
+
+
 #api.add_resource(Student, '/student/<string:name>')
-# 
-# app.run(port=5000)
+ 
+# if __name__ == '__main__':
+# 	print("--- Starting", __file__)
+	# app.run(debug=True, use_reloader=True, port=5000)
+app.run(port=5000)
