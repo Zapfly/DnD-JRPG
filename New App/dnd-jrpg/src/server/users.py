@@ -27,6 +27,8 @@ class User:
         return user
     
 
+    
+
     @classmethod
     def find_by_id(cls, _id):
         connection = sqlite3.connect('data.db')

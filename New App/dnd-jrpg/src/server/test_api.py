@@ -33,20 +33,27 @@ def test_puthero(client):
 
 def test_postuser(client):
     #http://localhost:5000/new-user
-    rv = client.post('/new-user', json={"username": "Bob", "password": "asdf"})
+    #add the JWT part
+    rv = client.post('/new-user', json={"username": "TestUser", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
     assert(rv.status_code == 201)
 
-    rv = client.delete('/new-user', json={"username": "Bob", "password": "asdf"})
+    rv = client.delete('/new-user', json={"username": "TestUser", "password": "TestPass"})
     assert("message" in json)
     assert(rv.status_code == 202)
-
-
-
-
     
 
-def test_getuser(client):
-    #http://localhost:5000/user/<name>
-    pass
+def test_auth(client):
+    #http://localhost:5000/auth
+    rv = client.post('/new-user', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()
+    assert("message" in json)
+    assert(rv.status_code == 201)
+
+    rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    assert(rv.status_code == 200)
+
+    rv = client.delete('/new-user', json={"username": "TestUser", "password": "TestPass"})
+    assert("message" in json)
+    assert(rv.status_code == 202)
