@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt import JWT, jwt_required
+
 from security import authenticate, identity
 from users import UserRegister
+from heroes import Hero
 
 app = Flask(__name__)
 app.secret_key = 'jose'
@@ -12,8 +14,8 @@ api = Api(app)
 jwt = JWT(app, authenticate, identity) #/auth
 
 
-# api.add_resource(Level, '/level<string:name>')
-# api.add_resource(Hero, '/hero<string:name>')
+# api.add_resource(Level, '/level/<string:name>')
+api.add_resource(Hero, '/hero')
 api.add_resource(UserRegister, '/new-user') #change to <integer:id>
 
 

@@ -11,7 +11,8 @@ create_table = "CREATE TABLE IF NOT EXISTS levels (level_id INTEGER PRIMARY KEY,
 cursor.execute(create_table)
 
 # will need more columns for hero stats
-create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, user_id INT, hero_info text, FOREIGN KEY (user_id) REFERENCES USERS (user_id))"
+# create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, user_id INT, hero_info text, FOREIGN KEY (user_id) REFERENCES USERS (user_id))"
+create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, hero_info text)"
 cursor.execute(create_table)
 connection.commit
 
