@@ -38,7 +38,7 @@ class Hero(Resource):
         data = Hero.parser.parse_args()
 
         hero = self.find_by_hero_id(hero_id)
-        updated_hero = {'hero_id': data[hero_id], 'hero_info': data["hero_info"]}
+        updated_hero = {'hero_id': data["hero_id"], 'hero_info': data["hero_info"]}
 
         if hero is None:
             try:
@@ -84,13 +84,19 @@ class Hero(Resource):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        query = "DELETE FROM heroes WHERE hero_id=?"
-        cursor.execute(query, (data["hero_id"],))
-
-        connection.commit()
-        connection.close()
-
-        return{'message': 'hero deleted'}        
+        search_query = "SELECT * FROM heroes WHERE hero_id=?"
+        result = cursor.execute(search_query, (data["hero_id"],))
+        row = result.fetchone()
+        if row:
+            delete_query = "DELETE FROM heroes WHERE hero_id=?"
+            cursor.execute(delete_query, (data["hero_id"],))
+            connection.commit()
+            connection.close()      
+            return{"message": "Hero deleted"}, 202
+        else:
+            connection.commit()
+            connection.close()
+            return{"message": "That hero does not exist"}, 400
 
         
 
