@@ -26,12 +26,12 @@ class Hero(Resource):
         result = cursor.execute(query, (hero_id,))
         row = result.fetchone()
         if row:
-            user = cls(*row)
+            hero = cls(*row)
         else:
-            user = None
+            hero = None
 
         connection.close()
-        return user
+        return hero
     
     @jwt_required()
     def put(self, hero_id):
@@ -52,7 +52,7 @@ class Hero(Resource):
                 return {"message": "An error occured inserting the item"}, 500
         return updated_hero
         
-    # @jwt_required()
+    @jwt_required()
     def post(self):
         data = Hero.parser.parse_args()
         if self.find_by_hero_id(data["hero_id"]):
@@ -63,7 +63,7 @@ class Hero(Resource):
         try:
             Hero.insert(new_hero)
         except:
-            return {"message": "An error occured inserting the item"}, 500
+            return {"message": "An error occured inserting the hero"}, 500
 
         return new_hero
     
@@ -78,6 +78,19 @@ class Hero(Resource):
         connection.commit()
         connection.close()
     
+    @jwt_required()
+    def delete(self):
+        data = Hero.parser.parse_args()
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "DELETE FROM heroes WHERE hero_id=?"
+        cursor.execute(query, (data["hero_id"],))
+
+        connection.commit()
+        connection.close()
+
+        return{'message': 'hero deleted'}        
 
         
 

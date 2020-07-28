@@ -41,6 +41,30 @@ def test_puthero(client):
     #http://localhost:5000/update-hero
     pass
 
+def test_posthero(client):
+    rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()
+    token = json["access_token"]
+    assert(rv.status_code == 200)
+
+    rv2 = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+            "hero_id": 2,
+            "hero_info": {
+                "name": "Hercules",
+                "atk": 30,
+                "hp": 40,
+                "sprite": "string"
+            }
+        
+        }
+    )
+    assert(token)
+    assert(rv2.status_code == 200)
+
+def test_deletehero(client):
+    pass
+
+
 def test_postuser(client):
     #http://localhost:5000/new-user
     #add the JWT part
@@ -57,4 +81,6 @@ def test_postuser(client):
 def test_auth(client):
     #http://localhost:5000/auth
     rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()
+    assert("access_token" in json)
     assert(rv.status_code == 200)
