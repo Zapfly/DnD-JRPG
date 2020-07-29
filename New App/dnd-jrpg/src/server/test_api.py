@@ -110,6 +110,20 @@ def test_deletehero(client):
     assert("message" in json == {'message': 'Hero deleted'})
     assert(rv.status_code == 202)
 
+    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+            "hero_id": 2,
+            "hero_info": {
+                "name": "Hercules",
+                "atk": 30,
+                "hp": 40,
+                "sprite": "string"
+            }
+    })
+
+    json = rv.get_json()
+    assert("message" in json == {'message': 'That hero does not exist'})
+    assert(rv.status_code == 400)
+
 def test_postuser(client):
     #http://localhost:5000/new-user
     #add the JWT part
