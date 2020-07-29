@@ -55,17 +55,29 @@ class Hero(Resource):
     @jwt_required()
     def post(self):
         data = Hero.parser.parse_args()
-        if self.find_by_hero_id(data["hero_id"]):
-            return {"message": "That hero already exists"}, 400
-       
-        new_hero = {'hero_id': data["hero_id"], 'hero_info': data["hero_info"]}
-     
-        try:
-            Hero.insert(new_hero)
-        except:
-            return {"message": "An error occured inserting the hero"}, 500
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
 
-        return new_hero
+        # if self.find_by_hero_id(data["hero_id"]):
+        #     return {"message": "That hero already exists"}, 400
+        search_query = "SELECT * FROM heroes WHERE hero_id=?"
+        result = cursor.execute(search_query, (data["hero_id"],))
+        row = result.fetchone()
+        if row:
+            connection.commit()
+            connection.close()
+            return {"message": "That hero already exists"}, 400     
+        else:
+            new_hero = {'hero_id': data["hero_id"], 'hero_info': data["hero_info"]}
+        
+            try:
+                Hero.insert(new_hero)
+            except:
+                return {"message": "An error occured inserting the hero"}, 500
+            connection.commit()
+            connection.close()
+            return new_hero
+            
     
     @classmethod
     def insert(cls, hero):
@@ -97,6 +109,17 @@ class Hero(Resource):
             connection.commit()
             connection.close()
             return{"message": "That hero does not exist"}, 400
+
+        # if self.find_by_hero_id(data["hero_id"]):
+        #     delete_query = "DELETE FROM heroes WHERE hero_id=?"
+        #     cursor.execute(delete_query, (data["hero_id"],))
+        #     connection.commit()
+        #     connection.close()      
+        #     return{"message": "Hero deleted"}, 202
+        # else:
+        #     connection.commit()
+        #     connection.close()
+        #     return{"message": "That hero does not exist"}, 400
 
         
 
