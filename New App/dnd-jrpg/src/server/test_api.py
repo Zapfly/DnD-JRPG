@@ -17,18 +17,6 @@ def client():
     #delete hero
 
 
-
-# test_func = api.func(4)
-# def test_simplefunc():
-#     assert api.simple_func() == "this is a function from api.py"
-
-# @pytest.fixture(autouse=True)
-# def run_around_tests():
-#     files_before= 
-
-# def test_answer():
-#     assert api.func(4) == 5
-#--------------------------------------------------
 def test_getlevel(client):
     #http://localhost:5000/level<string:name>
     pass
@@ -46,6 +34,18 @@ def test_posthero(client):
     json = rv.get_json()
     token = json["access_token"]
     assert(rv.status_code == 200)
+
+    rv = client.post('/hero', json={
+            "hero_id": 2,
+            "hero_info": {
+                "name": "Hercules",
+                "atk": 30,
+                "hp": 40,
+                "sprite": "string"
+            }     
+        }
+    )   
+    assert(rv.status_code == 401)
 
     rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
             "hero_id": 2,
@@ -70,7 +70,7 @@ def test_deletehero(client):
     token = json["access_token"]
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/hero', json={
             "hero_id": 2,
             "hero_info": {
                 "name": "Hercules",
@@ -79,10 +79,7 @@ def test_deletehero(client):
                 "sprite": "string"
             }
     })
-
-    json = rv.get_json()
-    assert("message" in json == {'message': 'That hero does not exist'})
-    assert(rv.status_code == 400)
+    assert(rv.status_code == 401)
 
     rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
             "hero_id": 2,
@@ -126,11 +123,18 @@ def test_deletehero(client):
 
 def test_postuser(client):
     #http://localhost:5000/new-user
-    #add the JWT part
+    rv = client.delete('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    json = rv.get_json()
+
     rv = client.post('/new-user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
     assert(rv.status_code == 201)
+
+    rv = client.post('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    json = rv.get_json()
+    assert("message" in json)
+    assert(rv.status_code == 400)
 
     rv = client.delete('/new-user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
@@ -144,3 +148,14 @@ def test_auth(client):
     json = rv.get_json()
     assert("access_token" in json)
     assert(rv.status_code == 200)
+
+    rv = client.post('/auth', json={"username": "WrongTestUser", "password": "TestPass"})
+    json = rv.get_json()
+    assert(rv.status_code == 401)
+
+    rv = client.post('/auth', json={"username": "TestUser", "password": "WrongTestPass68JwIotpIXNa"})
+    json = rv.get_json()
+    assert(rv.status_code == 401)
+
+
+
