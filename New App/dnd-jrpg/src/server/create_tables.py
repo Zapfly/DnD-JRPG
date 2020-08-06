@@ -4,14 +4,14 @@ connection = sqlite3.connect('data.db')
 connection.execute("PRAGMA foreign_keys = 1")
 cursor = connection.cursor()
 
-create_table = "CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, username text, password text)"
+create_table = "CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, username text UNIQUE, password text)"
 cursor.execute(create_table)
 
 create_table = "CREATE TABLE IF NOT EXISTS levels (level_id INTEGER PRIMARY KEY, monsters text)"
 cursor.execute(create_table)
 
 # will need more columns for hero stats
-create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, user_id INTEGER, name text, atk REAL, hp REAL, max_hp REAL, sprite BLOB, FOREIGN KEY (user_id) REFERENCES USERS (user_id))"
+create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, username text, heroname text, atk REAL, hp REAL, max_hp REAL, sprite BLOB, FOREIGN KEY (username) REFERENCES USERS (username))"
 # create_table = "CREATE TABLE IF NOT EXISTS heroes (hero_id INTEGER PRIMARY KEY, hero_info text)"
 cursor.execute(create_table)
 connection.commit

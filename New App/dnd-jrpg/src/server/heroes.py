@@ -11,12 +11,12 @@ class Hero(Resource):
     #     required=True,
     #     help="This field cannot be left blank!"
     # )
-    parser.add_argument('user_id',
-        type=int,
+    parser.add_argument('username',
+        type=str,
         required=True,
         help="This field cannot be left blank!"
     )
-    parser.add_argument('name',
+    parser.add_argument('heroname',
         type=str,
         required=True,
         help="This field cannot be left blank!"
@@ -113,16 +113,15 @@ class Hero(Resource):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        user_heroes_query = "SELECT * FROM heroes WHERE user_id=? AND name=?"
-        user_heroes = cursor.execute(user_heroes_query, (data["user_id"], data["name"]))
+        user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
+        user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
         row = user_heroes.fetchone()
         if row:
             connection.commit()
             connection.close()
             return {"message": "A hero with that name already exists"}, 400                    
         else:
-            # new_hero = {'hero_id': data["hero_id"], 'user_id': data["user_id"], 'hero_info': data["hero_info"]}
-            new_hero = {'user_id': data["user_id"], 'name': data["name"], 'atk': data["atk"], 'hp': data["hp"], 'max_hp': data["hp"], 'sprite': data["sprite"]}
+            new_hero = {'username': data["username"], 'heroname': data["heroname"], 'atk': data["atk"], 'hp': data["hp"], 'max_hp': data["hp"], 'sprite': data["sprite"]}
         
             try:
                 Hero.insert(new_hero)
@@ -139,7 +138,7 @@ class Hero(Resource):
         cursor = connection.cursor()
 
         query = "INSERT INTO heroes VALUES (NULL, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(query, (hero['user_id'], hero['name'], hero['atk'], hero['hp'], hero['max_hp'], hero['sprite']))
+        cursor.execute(query, (hero['username'], hero['heroname'], hero['atk'], hero['hp'], hero['max_hp'], hero['sprite']))
 
         connection.commit()
         connection.close()
@@ -150,12 +149,12 @@ class Hero(Resource):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        user_heroes_query = "SELECT * FROM heroes WHERE user_id=? AND name=?"
-        user_heroes = cursor.execute(user_heroes_query, (data["user_id"], data["name"]))
+        user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
+        user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
         row = user_heroes.fetchone()
         if row:
-            delete_query = "DELETE FROM heroes WHERE user_id=? AND name=?"
-            cursor.execute(delete_query, (data["user_id"], data["name"]))
+            delete_query = "DELETE FROM heroes WHERE username=? AND heroname=?"
+            cursor.execute(delete_query, (data["username"], data["heroname"]))
             connection.commit()
             connection.close()      
             return{"message": "Hero deleted"}, 202

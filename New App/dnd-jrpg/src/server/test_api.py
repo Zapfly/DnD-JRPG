@@ -36,25 +36,21 @@ def test_puthero(client):
 #     assert(rv.status_code == 200)
 
 #     rv = client.post('/hero', json={
-#             "hero_id": 2,
-#             "hero_info": {
-#                 "name": "Hercules",
-#                 "atk": 30,
-#                 "hp": 40,
-#                 "sprite": "string"
-#             }     
+#             "user_id": 1,
+#             "name": "Hercules",
+#             "atk": 30,
+#             "hp": 40,
+#             "sprite": "string"
 #         }
 #     )   
 #     assert(rv.status_code == 401)
 
 #     rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
-#             "hero_id": 2,
-#             "hero_info": {
-#                 "name": "Hercules",
-#                 "atk": 30,
-#                 "hp": 40,
-#                 "sprite": "string"
-#             }     
+#             "user_id": 1,
+#             "name": "Hercules",
+#             "atk": 30,
+#             "hp": 40,
+#             "sprite": "string"
 #         }
 #     )
 #     assert(token)

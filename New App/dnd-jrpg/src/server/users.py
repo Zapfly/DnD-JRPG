@@ -32,7 +32,7 @@ class User:
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        query = " SELECT * FROM users WHERE user_id=?"
+        query = "SELECT rowid,* FROM users WHERE user_id=?"
         result = cursor.execute(query, (user_id,))
         row = result.fetchone()
         if row:
@@ -90,5 +90,21 @@ class UserRegister(Resource):
         connection.close()
 
         return {"message": "User deleted successfully."}, 202
+    
+    # def get(self):
+    #     data = UserRegister.parcer.parse_args()
+
+    #     if User.find_by_username(data['username']) == False:
+    #         return {"message": "A user with that username does not exist"}, 400     
+
+    #     connection = sqlite3.connect('data.db')
+    #     cursor = connection.cursor()
+
+    #     query = "SELECT FROM users WHERE username=?"
+    #     cursor.execute(query, (data['username'],))
+
+
+
+
  
 
