@@ -25,9 +25,7 @@ class User:
 
         connection.close()
         return user
-    
-
-    
+      
 
     @classmethod
     def find_by_id(cls, user_id):
