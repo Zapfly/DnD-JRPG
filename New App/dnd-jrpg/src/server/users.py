@@ -89,7 +89,7 @@ class UserRegister(Resource):
         connection.commit()
         connection.close()
 
-        return {"message": "User deleted successfully."}, 202
+        return {"message": "User deleted successfully."}, 200
     
     # def get(self):
     #     data = UserRegister.parcer.parse_args()
