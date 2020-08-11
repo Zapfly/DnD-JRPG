@@ -25,7 +25,7 @@ def create_tables():
 jwt = JWT(app, authenticate, identity) #/auth
 
 # api.add_resource(Level, '/level/<string:name>')
-api.add_resource(Hero, '/hero')
+api.add_resource(Hero, '/hero/<string:heroname>')
 # api.add_resource(HeroList, '/heroes')
 api.add_resource(UserRegister, '/user') #change to <integer:id>
 
