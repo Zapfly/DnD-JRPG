@@ -55,16 +55,16 @@ class Hero(Resource):
        
 
         if hero is None:
-            hero = HeroModel(**data)
+            if HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname']):
+                return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 400
+            else:
+                hero = HeroModel(**data)
+                hero.save_to_db()
+                return {'message': "Hero created successfully"}
         else:
             # for item in data:
             #     print(f'{item} = {hero.json()[item]}')
                 # hero[f'{item}'] = data[f'{item}']
-
-
-
-
-
             hero.username = data['username']
             hero.heroname = data['heroname']
             hero.atk = data['atk']
@@ -73,28 +73,8 @@ class Hero(Resource):
             hero.sprite = data['sprite']
             hero.user_id = data['user_id']
             
-
-        hero.save_to_db()
-        
-        return {'message': 'hero updated'}
-        # hero.heroname = data['heroname']
-        # connection = sqlite3.connect('data.db')
-        # cursor = connection.cursor()
-
-        # user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
-        # user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
-        # row = user_heroes.fetchone()
-        # if row:
-        #     update_query = "UPDATE heroes SET heroname=?, atk=?, hp=?, max_hp=?, sprite=? WHERE username=? AND heroname=?"
-        #     update_data = (data["new_heroname"], data["atk"], data["hp"], data["max_hp"], data["sprite"], data["username"], data["heroname"],)
-        #     cursor.execute(update_query, update_data )
-        #     connection.commit()
-        #     connection.close()
-        #     return{"message": "Hero updated", "hero":f"{update_data}"}, 200
-        # else:
-        #     connection.commit()
-        #     connection.close()
-        #     return{"message": "That hero does not exist"}, 400
+            hero.save_to_db()
+            return {'message': "Hero updated"}
 
 
     @jwt_required()
@@ -121,8 +101,6 @@ class Hero(Resource):
         else:
             return{"message": "That hero does not exist"}, 400
 
-
-
 # class HeroList(Resource):
 #     TABLE_NAME = 'heroes'
 #     parser = reqparse.RequestParser()
@@ -135,8 +113,3 @@ class Hero(Resource):
 #         type=str,
 #         help="This field cannot be left blank!"
 #     )
-
-
-
-
-
