@@ -36,10 +36,10 @@ class Hero(Resource):
         required=True,
         help="This field cannot be left blank!"
     ) 
-    parser.add_argument('new_heroname',
-        type=str,
-        help="This field cannot be left blank!"
-    )
+    # parser.add_argument('new_heroname',
+    #     type=str,
+    #     help="This field cannot be left blank!"
+    # )
     parser.add_argument('user_id', 
         type=int,
         required=True,
@@ -72,52 +72,28 @@ class Hero(Resource):
     @jwt_required()
     def post(self):
         data = Hero.parser.parse_args()
-        if HeroModel.find_by_username_and_heroname(data['username'], data['heroname']):
+        if HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname']):
             return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 400
 
 
         hero = HeroModel(**data)
         hero.save_to_db()
         return {'message': 'Hero created successfully'}
-
-        # user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
-        # user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
-        # row = user_heroes.fetchone()
-        # if row:
-        #     connection.commit()
-        #     connection.close()
-        #     return {"message": "A hero with that name already exists"}, 400                    
-        # else:
-        #     new_hero = {'username': data["username"], 'heroname': data["heroname"], 'atk': data["atk"], 'hp': data["hp"], 'max_hp': data["hp"], 'sprite': data["sprite"]}
-        
-        #     try:
-        #         Hero.insert(new_hero)
-        #     except:
-        #         return {"message": "An error occured inserting the hero"}, 500
-        #     connection.commit()
-        #     connection.close()
-        #     return new_hero
             
     
     @jwt_required()
     def delete(self):
         data = Hero.parser.parse_args()
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
 
-        user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
-        user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
-        row = user_heroes.fetchone()
-        if row:
-            delete_query = "DELETE FROM heroes WHERE username=? AND heroname=?"
-            cursor.execute(delete_query, (data["username"], data["heroname"]))
-            connection.commit()
-            connection.close()      
+        hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname'])
+
+        if hero:
+            hero.delete_from_db()
             return{"message": "Hero deleted"}, 200
         else:
-            connection.commit()
-            connection.close()
             return{"message": "That hero does not exist"}, 400
+
+
 
 # class HeroList(Resource):
 #     TABLE_NAME = 'heroes'

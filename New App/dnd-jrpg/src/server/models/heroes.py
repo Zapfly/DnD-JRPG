@@ -1,3 +1,4 @@
+import sqlite3
 from db import db
 
 
@@ -28,8 +29,8 @@ class HeroModel(db.Model):
 
 
     @classmethod
-    def find_by_username_and_heroname(cls, username, heroname):
-        return cls.query.filter_by(username=username, heroname=heroname).first()
+    def find_by_user_id_and_heroname(cls, user_id, heroname):
+        return cls.query.filter_by(user_id=user_id, heroname=heroname).first()
     # def insert(cls, hero):
     #     connection = sqlite3.connect('data.db')
     #     cursor = connection.cursor()
