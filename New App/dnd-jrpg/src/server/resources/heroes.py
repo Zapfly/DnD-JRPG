@@ -2,9 +2,10 @@ import sqlite3
 from flask_restful import Resource, reqparse
 from flask_jwt import JWT, jwt_required
 
+from models.heroes import HeroModel
+from models.users import UserModel
 
 class Hero(Resource):
-    TABLE_NAME = 'heroes'
     parser = reqparse.RequestParser()
     parser.add_argument('username',
         type=str,
@@ -38,25 +39,13 @@ class Hero(Resource):
     parser.add_argument('new_heroname',
         type=str,
         help="This field cannot be left blank!"
-    )  
-    # @jwt_required()
-    # def put(self, hero_id):
-    #     data = Hero.parser.parse_args()
+    )
+    parser.add_argument('user_id', 
+        type=int,
+        required=True,
+        help="A user id is required"
+    )
 
-    #     hero = self.find_by_hero_id(hero_id)
-    #     updated_hero = {'hero_id': data["hero_id"], 'hero_info': data["hero_info"]}
-
-    #     if hero is None:
-    #         try:
-    #             self.insert(updated_hero)
-    #         except:
-    #             return {"message": "An error occured inserting the item"}, 500
-    #     else:
-    #         try:
-    #             self.update(updated_hero)
-    #         except:
-    #             return {"message": "An error occured inserting the item"}, 500
-    #     return updated_hero
 
     @jwt_required()
     def put(self):
@@ -83,38 +72,32 @@ class Hero(Resource):
     @jwt_required()
     def post(self):
         data = Hero.parser.parse_args()
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
+        if HeroModel.find_by_username_and_heroname(data['username'], data['heroname']):
+            return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 400
 
-        user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
-        user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
-        row = user_heroes.fetchone()
-        if row:
-            connection.commit()
-            connection.close()
-            return {"message": "A hero with that name already exists"}, 400                    
-        else:
-            new_hero = {'username': data["username"], 'heroname': data["heroname"], 'atk': data["atk"], 'hp': data["hp"], 'max_hp': data["hp"], 'sprite': data["sprite"]}
+
+        hero = HeroModel(**data)
+        hero.save_to_db()
+        return {'message': 'Hero created successfully'}
+
+        # user_heroes_query = "SELECT * FROM heroes WHERE username=? AND heroname=?"
+        # user_heroes = cursor.execute(user_heroes_query, (data["username"], data["heroname"]))
+        # row = user_heroes.fetchone()
+        # if row:
+        #     connection.commit()
+        #     connection.close()
+        #     return {"message": "A hero with that name already exists"}, 400                    
+        # else:
+        #     new_hero = {'username': data["username"], 'heroname': data["heroname"], 'atk': data["atk"], 'hp': data["hp"], 'max_hp': data["hp"], 'sprite': data["sprite"]}
         
-            try:
-                Hero.insert(new_hero)
-            except:
-                return {"message": "An error occured inserting the hero"}, 500
-            connection.commit()
-            connection.close()
-            return new_hero
+        #     try:
+        #         Hero.insert(new_hero)
+        #     except:
+        #         return {"message": "An error occured inserting the hero"}, 500
+        #     connection.commit()
+        #     connection.close()
+        #     return new_hero
             
-    
-    @classmethod
-    def insert(cls, hero):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-
-        query = "INSERT INTO heroes VALUES (NULL, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(query, (hero['username'], hero['heroname'], hero['atk'], hero['hp'], hero['max_hp'], hero['sprite']))
-
-        connection.commit()
-        connection.close()
     
     @jwt_required()
     def delete(self):
@@ -136,18 +119,18 @@ class Hero(Resource):
             connection.close()
             return{"message": "That hero does not exist"}, 400
 
-class HeroList(Resource):
-    TABLE_NAME = 'heroes'
-    parser = reqparse.RequestParser()
-    parser.add_argument('username',
-        type=str,
-        required=True,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('heroname',
-        type=str,
-        help="This field cannot be left blank!"
-    )
+# class HeroList(Resource):
+#     TABLE_NAME = 'heroes'
+#     parser = reqparse.RequestParser()
+#     parser.add_argument('username',
+#         type=str,
+#         required=True,
+#         help="This field cannot be left blank!"
+#     )
+#     parser.add_argument('heroname',
+#         type=str,
+#         help="This field cannot be left blank!"
+#     )
 
     
 

@@ -26,7 +26,7 @@ def test_gethero(client):
     pass
 
 def test_puthero(client):
-    #http://localhost:5000/update-hero
+    #http://localhost:5000/hero
 
     rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
     json = rv.get_json()
