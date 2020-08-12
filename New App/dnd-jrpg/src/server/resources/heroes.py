@@ -86,7 +86,7 @@ class Hero(Resource):
 
         hero = HeroModel(**data)
         hero.save_to_db()
-        return {'message': 'Hero created successfully'}
+        return {'message': 'Hero created successfully', 'hero': hero.json()}
 
 
     @jwt_required()

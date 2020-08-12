@@ -7,14 +7,15 @@ class UserModel(db.Model):
     username = db.Column(db.String(50))
     password = db.Column(db.String(80))
     
-    heroes = db.relationship('HeroModel', lazy='dynamic')
+    # heroes = db.relationship('HeroModel', lazy='dynamic')
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
 
     def json(self):
-        return {'username': self.username, 'password': self.password, 'heroes': [heroes.json() for hero in self.heroes.all()]}
+        return {'user_id': self.id, 'username': self.username, 'password': self.password}
+        #, 'heroes': [heroes.json() for hero in self.heroes.all()]
         # return {'username': self.username, 'password': self.password}
     
     @classmethod

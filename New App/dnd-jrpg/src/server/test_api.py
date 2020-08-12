@@ -2,17 +2,23 @@
 import pytest
 import api
 
+from db import db
 from flask import json
 
 @pytest.fixture
 def client():
-    api.app.config['TESTING'] = True
     client = api.app.test_client()
-    rv = client.post('/new-user', json={"username": "TestUser", "password": "TestPass"})
+    api.app.config['TESTING'] = True
+    db.init_app(api.app)
+    rv = client.post('/user', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()
+    test_user = json['user']
+    global test_user_id
+    test_user_id = test_user['user_id']
     #create level
     #create hero
     yield client
-    rv = client.delete('/new-user', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
     #delete level
     #delete hero
 
@@ -33,33 +39,37 @@ def test_puthero(client):
     token = json["access_token"]
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string"})
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string", "user_id": test_user_id})
 
-    rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "max_hp": 40,
+            "sprite": "string",
+            "user_id": test_user_id
         }
     )
+
     assert(token)
     assert(rv.status_code == 200)
 
-    rv = client.put('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
-            "heroname": "Hercules",
+            "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
             "sprite": "string",
-            "new_heroname": "Odysseus"
+            "user_id": test_user_id
         }
     )
     assert(token)
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Odysseus", "atk": 30, "hp": 40, "sprite": "string"})
-
+    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Odysseus", "atk": 30, "hp": 40, "sprite": "string", "user_id": test_user_id})
+    
+    assert(rv.get_json() == {'message': 'Hero deleted'})
     assert(rv.status_code == 200)
 
 
@@ -70,30 +80,32 @@ def test_posthero(client):
     token = json["access_token"]
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string"})
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string", "user_id": test_user_id})
 
-    rv = client.post('/hero', json={
+    rv = client.post('/hero/Hercules', json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
         }
     )   
     assert(rv.status_code == 401)
 
-    rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
         }
     )
     assert(token)
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string"})
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser", "heroname": "Hercules", "atk": 30, "hp": 40, "sprite": "string", "user_id": test_user_id})
     json = rv.get_json()
     assert(rv.status_code == 200)
 
@@ -103,42 +115,46 @@ def test_deletehero(client):
     token = json["access_token"]
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', json={
+    rv = client.delete('/hero/Hercules', json={
            "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
     })
     assert(rv.status_code == 401)
 
-    rv = client.post('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
         }
     )
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
     })
 
     json = rv.get_json()
     assert("message" in json == {'message': 'Hero deleted'})
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
             "username": "TestUser",
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
-            "sprite": "string"
+            "sprite": "string",
+            "user_id": test_user_id
     })
 
     json = rv.get_json()
@@ -147,20 +163,20 @@ def test_deletehero(client):
 
 def test_postuser(client):
     #http://localhost:5000/new-user
-    rv = client.delete('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
 
-    rv = client.post('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.post('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
     assert(rv.status_code == 201)
 
-    rv = client.post('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.post('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
     assert(rv.status_code == 400)
 
-    rv = client.delete('/new-user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
     assert(rv.status_code == 200)
