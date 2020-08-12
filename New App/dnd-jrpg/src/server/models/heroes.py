@@ -31,15 +31,6 @@ class HeroModel(db.Model):
     @classmethod
     def find_by_user_id_and_heroname(cls, user_id, heroname):
         return cls.query.filter_by(user_id=user_id, heroname=heroname).first()
-    # def insert(cls, hero):
-    #     connection = sqlite3.connect('data.db')
-    #     cursor = connection.cursor()
-
-    #     query = "INSERT INTO heroes VALUES (NULL, ?, ?, ?, ?, ?, ?)"
-    #     cursor.execute(query, (hero['username'], hero['heroname'], hero['atk'], hero['hp'], hero['max_hp'], hero['sprite']))
-
-    #     connection.commit()
-    #     connection.close()
         
     def save_to_db(self):
         db.session.add(self)
