@@ -29,20 +29,14 @@ class UserRegister(Resource):
     def delete(self):
         data = UserRegister.parcer.parse_args()
 
-        if UserModel.find_by_username(data['username']) == False:
-            return {"message": "A user with that username does not exist"}, 400     
+        user = UserModel.find_by_username(data['username'])
 
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
+        if user:
+            user.delete_from_db()             
+            return {"message": "User deleted successfully."}, 200
+           
+        return {"message": "A user with that username does not exist"}, 400 
 
-        query = "DELETE FROM users WHERE username=?"
-        cursor.execute(query, (data['username'],))
-
-        connection.commit()
-        connection.close()
-
-        return {"message": "User deleted successfully."}, 200
-    
     # def get(self):
     #     data = UserRegister.parcer.parse_args()
 

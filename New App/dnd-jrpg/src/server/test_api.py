@@ -162,7 +162,7 @@ def test_deletehero(client):
     assert(rv.status_code == 400)
 
 def test_postuser(client):
-    #http://localhost:5000/new-user
+    #http://localhost:5000/user
     rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
 
