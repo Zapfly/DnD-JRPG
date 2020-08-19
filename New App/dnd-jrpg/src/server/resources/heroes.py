@@ -7,11 +7,11 @@ from models.users import UserModel
 
 class Hero(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('username',
-        type=str,
-        # required=True,
-        help="This field cannot be left blank!"
-    )
+    # parser.add_argument('username',
+    #     type=str,
+    #     # required=True,
+    #     help="This field cannot be left blank!"
+    # )
     parser.add_argument('heroname',
         type=str,
         # required=True,
@@ -72,7 +72,12 @@ class Hero(Resource):
                 hero.user_id = data['user_id']
                 
                 hero.save_to_db()
-                return {'message': "Hero updated"}
+
+                # hero_update = HeroModel.find_all_by_user_id_and_heroname(data['user_id'], data['heroname'])
+                # old_hero = HeroModel.find_all_by_user_id_and_heroname(data['user_id'], heroname)
+                # print(hero_update)
+                # print(old_hero)
+                return {'message': "Hero updated"}, 200
 
 
     @jwt_required()
@@ -91,7 +96,7 @@ class Hero(Resource):
         data = Hero.parser.parse_args()
         hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)
         if hero:
-            return hero.json()
+            return {'message': f'Hero {heroname} found', 'hero': hero.json()}, 200
         return {'message': 'Hero not found'}, 404
 
 

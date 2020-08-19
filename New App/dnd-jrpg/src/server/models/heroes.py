@@ -6,7 +6,6 @@ class HeroModel(db.Model):
     __tablename__ = "heroes"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50))
     heroname = db.Column(db.String(50))
     atk = db.Column(db.Integer)
     hp = db.Column(db.Integer)    
@@ -15,8 +14,7 @@ class HeroModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('UserModel')
 
-    def __init__(self, username, heroname, atk, hp, max_hp, sprite, user_id):
-        self.username = username
+    def __init__(self, heroname, atk, hp, max_hp, sprite, user_id):
         self.heroname = heroname
         self.atk = atk
         self.hp = hp
@@ -25,12 +23,18 @@ class HeroModel(db.Model):
         self.user_id = user_id
 
     def json(self):
-        return {'username': self.username, 'heroname': self.heroname, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite, 'user_id': self.user_id}
+        return {'heroname': self.heroname, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite, 'user_id': self.user_id}
 
 
     @classmethod
     def find_by_user_id_and_heroname(cls, user_id, heroname):
         return cls.query.filter_by(user_id=user_id, heroname=heroname).first()
+
+    @classmethod
+    def find_all_by_user_id_and_heroname(cls, user_id, heroname):
+        hero_list = cls.query.filter_by(user_id=user_id, heroname=heroname)
+        return hero_list
+
         
     def save_to_db(self):
         db.session.add(self)
