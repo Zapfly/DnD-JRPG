@@ -38,7 +38,7 @@ class Hero(Resource):
     )
     parser.add_argument('user_id',
         type=int,
-        # required=True,
+        required=True,
         help="A user id is required"
     )
 
@@ -112,15 +112,21 @@ class Hero(Resource):
         else:
             return{"message": "That hero does not exist"}, 400
 
-# class HeroList(Resource):
-#     TABLE_NAME = 'heroes'
-#     parser = reqparse.RequestParser()
-#     parser.add_argument('username',
-#         type=str,
-#         required=True,
-#         help="This field cannot be left blank!"
-#     )
-#     parser.add_argument('heroname',
-#         type=str,
-#         help="This field cannot be left blank!"
-#     )
+class HeroList(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('user_id',
+        type=int,
+        required=True,
+        help="A user id is required"
+    )
+
+    def get(self):
+        data = Hero.parser.parse_args()
+
+        hero_list = HeroModel.find_all_by_user_id(data['user_id'])
+        hero_list_json = {'heroes': [hero.json() for hero in hero_list]}
+
+        if len(hero_list_json['heroes']) > 0:
+            return hero_list_json, 200
+        else:
+            return {'message': "This user has no heroes or doesn't exist"}, 404

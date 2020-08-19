@@ -6,7 +6,7 @@ from db import db
 
 from security import authenticate, identity
 from resources.users import UserRegister
-from resources.heroes import Hero
+from resources.heroes import Hero, HeroList
 
 app = Flask(__name__)
 app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=1)
@@ -26,7 +26,7 @@ jwt = JWT(app, authenticate, identity) #/auth
 
 # api.add_resource(Level, '/level/<string:name>')
 api.add_resource(Hero, '/hero/<string:heroname>')
-# api.add_resource(HeroList, '/heroes')
+api.add_resource(HeroList, '/heroes')
 api.add_resource(UserRegister, '/user') #change to <integer:id>
 
 

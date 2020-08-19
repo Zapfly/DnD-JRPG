@@ -31,10 +31,9 @@ class HeroModel(db.Model):
         return cls.query.filter_by(user_id=user_id, heroname=heroname).first()
 
     @classmethod
-    def find_all_by_user_id_and_heroname(cls, user_id, heroname):
-        hero_list = cls.query.filter_by(user_id=user_id, heroname=heroname)
+    def find_all_by_user_id(cls, user_id):
+        hero_list = cls.query.filter_by(user_id=user_id)
         return hero_list
-
         
     def save_to_db(self):
         db.session.add(self)
