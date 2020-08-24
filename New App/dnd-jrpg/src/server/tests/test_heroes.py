@@ -99,6 +99,7 @@ def test_puthero(client):
             "user_id": test_user_id
         }
     )
+    #test required authorization
     assert(rv.status_code == 401)
 
     rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
@@ -109,17 +110,61 @@ def test_puthero(client):
             "user_id": test_user_id
         }
     )
+    #updating when heroname exists but data["heroname"] does not
+    json = rv.get_json()
+    assert(json['message'] == "Hero updated")
     assert(rv.status_code == 200)
 
     rv = client.get('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
         "user_id": test_user_id
     })
+    #previous test continued
     assert(rv.status_code == 404)
 
     rv = client.get('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
         "user_id": test_user_id
     })
+    #previous test continued
     assert(rv.status_code == 200)
+    
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
+        "heroname": "Odysseus",
+        "atk": 30,
+        "hp": 40,
+        "sprite": "string",
+        "user_id": test_user_id
+        }
+    )
+    #testing when heroname doesn't exist but data["heroname"] does
+    json = rv.get_json()
+    assert(json['message'] == "A hero with name 'Odysseus' already exists.")
+    assert(rv.status_code == 400)
+
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
+        "heroname": "Hercules",
+        "atk": 30,
+        "hp": 40,
+        "sprite": "string",
+        "user_id": test_user_id
+        }
+    )
+    json = rv.get_json()
+    #test when neither heroname exists
+    assert(json['message'] == "Hero created successfully")
+    assert(rv.status_code == 200)
+
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
+        "heroname": "Odysseus",
+        "atk": 30,
+        "hp": 40,
+        "sprite": "string",
+        "user_id": test_user_id
+        }
+    )
+    json = rv.get_json()
+    #test when both exist
+    assert(json['message'] == "A hero with name 'Odysseus' already exists.")
+    assert(rv.status_code == 400)
 
 
 def test_deletehero(client):

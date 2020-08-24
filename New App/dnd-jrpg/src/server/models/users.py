@@ -7,7 +7,6 @@ class UserModel(db.Model):
     username = db.Column(db.String(50))
     password = db.Column(db.String(80))
     
-    # heroes = db.relationship('HeroModel', lazy='dynamic')
 
     def __init__(self, username, password):
         self.username = username
@@ -15,12 +14,16 @@ class UserModel(db.Model):
 
     def json(self):
         return {'user_id': self.id, 'username': self.username, 'password': self.password}
-        #, 'heroes': [heroes.json() for hero in self.heroes.all()]
-        # return {'username': self.username, 'password': self.password}
     
     @classmethod
     def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+        user = cls.query.filter_by(username=username).first()
+        return user
+
+    @classmethod
+    def find_by_username_and_password(cls, username, password):
+        user = cls.query.filter_by(username=username, password=password).first()
+        return user   
 
     def save_to_db(self):
         db.session.add(self)

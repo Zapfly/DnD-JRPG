@@ -1,5 +1,7 @@
 import sqlite3
 from flask_restful import Resource, reqparse
+from flask_jwt import JWT, jwt_required
+
 from models.users import UserModel
     
 class UserRegister(Resource):
@@ -37,20 +39,13 @@ class UserRegister(Resource):
            
         return {"message": "A user with that username does not exist"}, 400 
 
-    # def get(self):
-    #     data = UserRegister.parcer.parse_args()
+    @jwt_required()
+    def get(self):
+        data = UserRegister.parcer.parse_args()
 
-    #     if User.find_by_username(data['username']) == False:
-    #         return {"message": "A user with that username does not exist"}, 400     
+        user = UserModel.find_by_username_and_password(data['username'], data['password'])
 
-    #     connection = sqlite3.connect('data.db')
-    #     cursor = connection.cursor()
-
-    #     query = "SELECT FROM users WHERE username=?"
-    #     cursor.execute(query, (data['username'],))
-
-
-
-
- 
-
+        if user:
+            result = user.json()
+            return {"username": result["username"], "user_id": result["user_id"]}, 200
+        return {"message": "That user does not exist"}, 400

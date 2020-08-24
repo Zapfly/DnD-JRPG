@@ -53,3 +53,30 @@ def test_auth(client):
     assert(rv.status_code == 401)
 
     rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
+
+
+def test_get(client):
+    rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.post('/user', json={"username": "TestUser1", "password": "TestPass"})
+    rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()    
+    token = json["access_token"]
+
+    rv = client.get('/user', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser1", "password": "TestPass"})
+    json = rv.get_json()
+    assert(json['username'] == 'TestUser1')
+    assert(rv.status_code == 200)
+
+    rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
+    
+    rv = client.get('/user', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser1", "password": "TestPass"})
+    json = rv.get_json()
+    assert(json['message'] == 'That user does not exist')
+    assert(rv.status_code == 400)
+
+
+
+
+
+
+

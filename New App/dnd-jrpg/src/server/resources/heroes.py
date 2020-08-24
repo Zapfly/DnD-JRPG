@@ -49,14 +49,13 @@ class Hero(Resource):
 
         hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)
        
-
         if hero is None:
             if HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname']):
                 return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 400
             else:
                 hero = HeroModel(**data)
                 hero.save_to_db()
-                return {'message': "Hero created successfully"}
+                return {'message': "Hero created successfully"}, 200
         else:
             if HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname']):
                 return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 400
