@@ -26,7 +26,7 @@ def test_postuser(client):
     rv = client.post('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert("message" in json)
-    assert(rv.status_code == 400)
+    assert(rv.status_code == 404)
 
     rv = client.delete('/user', json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
@@ -72,7 +72,7 @@ def test_get(client):
     rv = client.get('/user', headers={"Authorization" : f"JWT {token}"}, json={"username": "TestUser1", "password": "TestPass"})
     json = rv.get_json()
     assert(json['message'] == 'That user does not exist')
-    assert(rv.status_code == 400)
+    assert(rv.status_code == 404)
 
 
 
