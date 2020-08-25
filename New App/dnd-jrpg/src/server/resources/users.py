@@ -21,12 +21,13 @@ class UserRegister(Resource):
         data = UserRegister.parcer.parse_args()
 
         if UserModel.find_by_username(data['username']):
-            return {"message": "A user with that username already exists"}, 400
+            return {"message": "A user with that username already exists"}, 404
 
         user = UserModel(**data)
-        user.save_to_db()        
+        user.save_to_db()
+        return_user = user.json()        
 
-        return {"message": "User created successfully.", 'user': user.json()}, 201
+        return {"message": "User created successfully.", 'user': {'user_id': return_user['user_id'], 'username': return_user['username']}}, 201
     
     def delete(self):
         data = UserRegister.parcer.parse_args()
@@ -37,7 +38,7 @@ class UserRegister(Resource):
             user.delete_from_db()             
             return {"message": "User deleted successfully."}, 200
            
-        return {"message": "A user with that username does not exist"}, 400 
+        return {"message": "A user with that username does not exist"}, 404
 
     @jwt_required()
     def get(self):
@@ -48,4 +49,4 @@ class UserRegister(Resource):
         if user:
             result = user.json()
             return {"username": result["username"], "user_id": result["user_id"]}, 200
-        return {"message": "That user does not exist"}, 400
+        return {"message": "That user does not exist"}, 404
