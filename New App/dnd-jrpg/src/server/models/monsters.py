@@ -1,4 +1,3 @@
-import sqlite3
 from db import db
 
 
@@ -11,6 +10,7 @@ class MonsterModel(db.Model):
     hp = db.Column(db.Integer)    
     max_hp = db.Column(db.Integer)  
     sprite = db.Column(db.String)
+    
     levelname = db.Column(db.String, db.ForeignKey('levels.levelname'))
     level = db.relationship('LevelModel')    
 
@@ -26,9 +26,17 @@ class MonsterModel(db.Model):
         return {'monstername': self.monstername, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite, 'levelname': self.levelname}
 
     @classmethod
-    def find_by_levelname(cls, levelname):
-        return cls.query.filter_by(levelname=levelname).first()
+    def find_by_monstername(cls, monstername):
+        return cls.query.filter_by(monstername=monstername).first()
+    
+    @classmethod
+    def find_by_levelname_and_monstername(cls, levelname, monstername):
+        return cls.query.filter_by(levelname=levelname, monstername=monstername).first()
 
+    @classmethod
+    def find_all_by_levelname(cls, levelname):
+        return cls.query.filter_by(levelname=levelname)
+        
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
