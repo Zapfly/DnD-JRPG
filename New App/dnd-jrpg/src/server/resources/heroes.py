@@ -3,28 +3,24 @@ from flask_restful import Resource, reqparse
 from flask_jwt import JWT, jwt_required
 
 from models.heroes import HeroModel
-from models.users import UserModel
+
 
 class Hero(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('heroname',
-        type=str,
-        help="This field cannot be left blank!"
+        type=str
     )
     parser.add_argument('atk',
-        type=float,
-        help="This field cannot be left blank!"
+        type=float
     )
     parser.add_argument('hp',
-        type=float,    
-        help="This field cannot be left blank!"
+        type=float   
     )
     parser.add_argument('max_hp',
-        type=float,
-        help="This field cannot be left blank!"
+        type=float
     )
     parser.add_argument('sprite',
-        help="This field cannot be left blank!"
+        type=str
     )
     parser.add_argument('user_id',
         type=int,
@@ -32,13 +28,27 @@ class Hero(Resource):
         help="A user id is required"
     )
 
+    @jwt_required()
+    def post(self, heroname):
+        data = Hero.parser.parse_args()
+        if HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname):
+            return {'message': "A hero with name '{}' already exists.".format(heroname)}, 404
+        hero = HeroModel(**data)
+        hero.save_to_db()
+        return {'message': 'Hero created successfully', 'hero': hero.json()}
+
+    @jwt_required()
+    def get(self, heroname):
+        data = Hero.parser.parse_args()
+        hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)
+        if hero:
+            return hero.json(), 200
+        return {'message': 'Hero not found'}, 404
 
     @jwt_required()
     def put(self, heroname):
         data = Hero.parser.parse_args()
-
-        hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)
-       
+        hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)      
         if hero is None:
             if HeroModel.find_by_user_id_and_heroname(data['user_id'], data['heroname']):
                 return {'message': "A hero with name '{}' already exists.".format(data['heroname'])}, 404
@@ -55,32 +65,9 @@ class Hero(Resource):
                 hero.hp = data['hp']
                 hero.max_hp = data['max_hp']
                 hero.sprite = data['sprite']
-                hero.user_id = data['user_id']
-                
+                hero.user_id = data['user_id']              
                 hero.save_to_db()
-
                 return {'message': "Hero updated"}, 200
-
-
-    @jwt_required()
-    def post(self, heroname):
-        data = Hero.parser.parse_args()
-        if HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname):
-            return {'message': "A hero with name '{}' already exists.".format(heroname)}, 404
-
-
-        hero = HeroModel(**data)
-        hero.save_to_db()
-        return {'message': 'Hero created successfully', 'hero': hero.json()}
-
-    @jwt_required()
-    def get(self, heroname):
-        data = Hero.parser.parse_args()
-        hero = HeroModel.find_by_user_id_and_heroname(data['user_id'], heroname)
-        if hero:
-            return hero.json(), 200
-        return {'message': 'Hero not found'}, 404
-
 
     @jwt_required()
     def delete(self, heroname):
@@ -111,4 +98,4 @@ class HeroList(Resource):
         if len(hero_list_json['heroes']) > 0:
             return hero_list_json, 200
         else:
-            return {'message': "This user has no heroes or doesn't exist"}, 404
+            return {'message': "This user either doesn't exist, or they have no heroes"}, 404
