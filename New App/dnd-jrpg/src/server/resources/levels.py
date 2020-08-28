@@ -1,8 +1,7 @@
-import sqlite3
 from flask_restful import Resource, reqparse
 from flask_jwt import JWT, jwt_required
-
 from models.levels import LevelModel
+
 
 class Level(Resource):
     parser = reqparse.RequestParser()
@@ -11,93 +10,67 @@ class Level(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
-    parser.add_argument('monster1name',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster1atk',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster1hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster1max_hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster1sprite',
+    parser.add_argument('old_levelname',
         type=str,
-        help="A user id is required"
-    )
-    parser.add_argument('monster2name',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster2atk',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster2hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster2max_hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster2sprite',
-        type=str,
-        help="A user id is required"
-    )
-    parser.add_argument('monster3name',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster3atk',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster3hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster3max_hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster3sprite',
-        type=str,
-        help="A user id is required"
-    )
-    parser.add_argument('monster4name',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster4atk',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster4hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster4max_hp',
-        type=float,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('monster4sprite',
-        type=str,
-        help="A user id is required"
     )
 
+    @jwt_required()
+    def post(self):
+        data = Level.parser.parse_args()
+
+        if LevelModel.find_by_levelname(data['levelname']):
+            return {'message': "A level with name '{}' already exists.".format(data['levelname'])}, 404
+        
+        level = LevelModel(data['levelname'])
+        try:
+            level.save_to_db()
+        except:
+            return {'message': "An error occurred creating the level."}, 500
+
+        return level.json(), 201
+
+    @jwt_required()
     def get(self):
-        data = Level.parcer.parse_args()
+        data = Level.parser.parse_args()
 
         level = LevelModel.find_by_levelname(data['levelname'])
 
         if level:
             return level.json(), 200
-        return {'message': 'A level with that name does not exist'}, 404
-        
+        return {'message': 'Level not found'}, 404
+
+    @jwt_required()
+    def put(self):
+        data = Level.parser.parse_args()
+        level = LevelModel.find_by_levelname(data['old_levelname'])      
+        if level is None:
+            if LevelModel.find_by_levelname(data['levelname']):
+                return {'message': "A level with name '{}' already exists.".format(data['levelname'])}, 404
+            else:
+                level = LevelModel(data['levelname'])
+                level.save_to_db()
+                return {'message': "Level '{}' created successfully.".format(data['levelname'])}, 200
+        else:
+            if LevelModel.find_by_levelname(data['levelname']):
+                return {'message': "A level with name '{}' already exists.".format(data['levelname'])}, 404
+            else:
+                level.levelname = data['levelname']
+                level.save_to_db()
+                return {'message': 'Level updated successfully.'}, 200
+
+    @jwt_required()
+    def delete(self):
+        data = Level.parser.parse_args()
+
+        level = LevelModel.find_by_levelname(data['levelname'])
+
+        if level:
+            level.delete_from_db()
+            return {'message': "Level '{}' deleted.".format(data['levelname'])}, 200
+        return {'message': 'That level does not exist.'}, 404
+
+
+class LevelList(Resource):
+    @jwt_required()
+    def get(self):
+        return {'levels': [level.json() for level in LevelModel.query.all()]}
