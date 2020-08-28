@@ -7,6 +7,8 @@ from db import db
 from security import authenticate, identity
 from resources.users import UserRegister
 from resources.heroes import Hero, HeroList
+from resources.levels import Level, LevelList
+from resources.monsters import Monster
 
 app = Flask(__name__)
 app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=1)
@@ -24,9 +26,11 @@ def create_tables():
 
 jwt = JWT(app, authenticate, identity) #/auth
 
-# api.add_resource(Level, '/level/<string:name>')
+api.add_resource(Level, '/level')
+api.add_resource(LevelList, '/levels')
 api.add_resource(Hero, '/hero/<string:heroname>')
 api.add_resource(HeroList, '/heroes')
+api.add_resource(Monster, '/monster')
 api.add_resource(UserRegister, '/user') #change to <integer:id>
 
 
