@@ -64,7 +64,9 @@ def test_posthero(client):
     )
 
     json = rv.get_json()
+    hero = json['hero']
     assert(rv.status_code == 200)
+    assert(hero['heroname'] == 'Odysseus')
 
 
 def test_gethero(client):
