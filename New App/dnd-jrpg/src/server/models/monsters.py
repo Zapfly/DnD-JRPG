@@ -1,3 +1,4 @@
+import sqlite3
 from db import db
 
 
@@ -23,7 +24,7 @@ class MonsterModel(db.Model):
         self.levelname = levelname
 
     def json(self):
-        return {'monstername': self.monstername, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite, 'levelname': self.levelname}
+        return {'monstername': self.monstername, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite}
 
     @classmethod
     def find_by_monstername(cls, monstername):
@@ -36,7 +37,7 @@ class MonsterModel(db.Model):
     @classmethod
     def find_all_by_levelname(cls, levelname):
         return cls.query.filter_by(levelname=levelname)
-        
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
