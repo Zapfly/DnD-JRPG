@@ -68,6 +68,19 @@ def test_posthero(client):
     assert(rv.status_code == 200)
     assert(hero['heroname'] == 'Odysseus')
 
+    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
+            "heroname": "Odysseus",
+            "atk": 30,
+            "hp": 40,
+            "sprite": "string",
+            "user_id": test_user_id
+        }
+    )
+
+    json = rv.get_json()
+    assert(rv.status_code == 404)
+    assert(json['message'] == "A hero with name 'Odysseus' already exists.")
+
 
 def test_gethero(client):
     rv = client.get('/hero/Hercules', json={
@@ -151,7 +164,7 @@ def test_puthero(client):
     json = rv.get_json()
     #test when neither heroname exists
     assert(json['message'] == "Hero created successfully")
-    assert(rv.status_code == 200)
+    assert(rv.status_code == 201)
 
     rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
         "heroname": "Odysseus",
@@ -226,8 +239,3 @@ def test_get_allheroes(client):
     )
     json = rv.get_json()
     assert(rv.status_code == 404)
-
-
-
-
-
