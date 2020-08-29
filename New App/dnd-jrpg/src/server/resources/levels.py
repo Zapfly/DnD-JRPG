@@ -49,7 +49,7 @@ class Level(Resource):
             else:
                 level = LevelModel(data['levelname'])
                 level.save_to_db()
-                return {'message': "Level '{}' created successfully.".format(data['levelname'])}, 200
+                return {'message': "Level '{}' created successfully.".format(data['levelname'])}, 201
         else:
             if LevelModel.find_by_levelname(data['levelname']):
                 return {'message': "A level with name '{}' already exists.".format(data['levelname'])}, 404
