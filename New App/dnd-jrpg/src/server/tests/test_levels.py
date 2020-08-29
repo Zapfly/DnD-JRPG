@@ -53,6 +53,7 @@ def test_postlevel(client):
     assert(rv.status_code == 404)
     assert(json['message'] == "A level with name 'Mount Olympus' already exists.")
 
+
 def test_getlevel(client):
     rv = client.post('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
 
@@ -78,6 +79,7 @@ def test_getlevel(client):
     assert(rv.status_code == 200)
     assert(json['levelname'] == 'Mount Olympus')
 
+
 def test_putlevel(client):
     rv = client.put('/level', json={
         "levelname": "Mount Olympus"})
@@ -86,7 +88,7 @@ def test_putlevel(client):
     rv = client.put('/level', headers={"Authorization" : f"JWT {token}"}, json={
         "levelname": "Mount Olympus"})
     json = rv.get_json()
-    assert(rv.status_code == 200)
+    assert(rv.status_code == 201)
     assert(json['message'] == "Level 'Mount Olympus' created successfully.")
 
     rv = client.put('/level', headers={"Authorization" : f"JWT {token}"}, json={
@@ -110,7 +112,7 @@ def test_putlevel(client):
     rv = client.put('/level', headers={"Authorization" : f"JWT {token}"}, json={
         "levelname": "Mount Olympus"})
     json = rv.get_json()
-    assert(rv.status_code == 200)
+    assert(rv.status_code == 201)
     assert(json['message'] == "Level 'Mount Olympus' created successfully.")
 
     rv = client.put('/level', headers={"Authorization" : f"JWT {token}"}, json={
@@ -123,6 +125,7 @@ def test_putlevel(client):
     assert(json['message'] == "A level with name 'New Mount Olympus' already exists.")
 
     rv = client.delete('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "New Mount Olympus"})
+
 
 def test_deletelevel(client):
     rv = client.post('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
@@ -148,6 +151,7 @@ def test_deletelevel(client):
     json = rv.get_json()
     assert(rv.status_code == 200)
     assert(json['message'] == "Level 'Mount Olympus' deleted.")
+
 
 def test_getalllevels(client):
     rv = client.post('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
