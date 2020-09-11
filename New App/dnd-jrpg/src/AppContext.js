@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import App from './App.js';
 
 import { Arena } from './scripts/combat.js';
+import { useFetch, useFetchWithAuth } from './Components/FetchComp/FetchComp.js';
 
 import Herc from './images/Herccolored.png';
 import Gobo from './images/250px-Chuffy_Lickwound.jpg';
@@ -10,47 +11,6 @@ import CombatComp from './Components/CombatComp/CombatComp.js';
 export const AppContext = React.createContext();
 
 const arena = new Arena();
-const levels = 
-    { 
-        level1: [
-            {
-                name:'Boblin 0',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },{
-                name:'Boblin 1',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },{
-                name:'Boblin 2',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },{
-                name:'Boblin 3',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },
-            {
-                name:'Boblin 4',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },
-            {
-                name:'Boblin 5',
-                atk: 2,
-                hp: 40,
-                sprite: Gobo
-            },
-        ],
-        level2: [
-
-        ]
-    }
 
 
 export const ContextProvider = (props) => {
@@ -58,18 +18,34 @@ export const ContextProvider = (props) => {
     const [attackMessage, setAttackMessage] = useState("");
 
     const [initFetch, setInitFetch] = useState(false);
-    const [currentLevel, setCurrentLevel] = useState(levels.level1);
+    const [levelList, setLevelList] = useState(null);
+    const [currentLevel, setCurrentLevel] = useState(null);
     const [combatLog, setCombatLog] = useState([]);
 
-    if (initFetch === false) {
-        arena.monsters = [];
-        arena.heroes = [];        
-        arena.createHero("Hercules", 30, 40, Herc);        
-        currentLevel.forEach(i => {
-            arena.createMonster(i.name, i.atk, i.hp, i.sprite)
-        })
-        setInitFetch(true);       
-    }
+    // useFetchWithAuth()
+
+    // useEffect(async() => {
+    //     const response = await fetch("http://localhost:5000/levels", {
+    //         method: 'GET',
+    //         headers: {
+    //             Authorization: `JWT ${token}`
+    //         }
+    //     });
+    //     const data = await response.json();
+    //     const [levels] = data.levels;
+    //     setLevelList(levels);
+    //     setCurrentLevel(levels[0]); //this code will have to change when current user's current level is stored in database
+    // }, []);
+
+    // if (initFetch === false) {
+    //     arena.monsters = [];
+    //     arena.heroes = [];        
+    //     arena.createHero("Hercules", 30, 40, Herc);        
+    //     currentLevel.forEach(i => {
+    //         arena.createMonster(i.name, i.atk, i.hp, i.sprite)
+    //     })
+    //     setInitFetch(true);       
+    // }
 
     const addToLog = (msg) => {
         setCombatLog([...combatLog, ...msg])
@@ -79,11 +55,11 @@ export const ContextProvider = (props) => {
         arena.combatants = [];
     }
 
-    const specifyLevel = (lvl) => {
-        // arena.monsters = [...lvl];
-        setCurrentLevel(lvl);
-        setInitFetch(false);
-    }
+    // const specifyLevel = (lvl) => {
+    //     // arena.monsters = [...lvl];
+    //     setCurrentLevel(lvl);
+    //     setInitFetch(false);
+    // }
 
     return (
         <AppContext.Provider
@@ -94,6 +70,8 @@ export const ContextProvider = (props) => {
                 setSelectedMonster,
                 attackMessage,
                 setAttackMessage,
+                levelList,
+                setLevelList,
                 currentLevel,
                 setCurrentLevel,
                 addToLog,
