@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
+from flask_cors import CORS
 import datetime
 from db import db
 
@@ -19,6 +20,7 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'jose'
 
 api = Api(app)
+CORS(app)
 
 @app.before_first_request
 def create_tables():
@@ -32,7 +34,6 @@ api.add_resource(Hero, '/hero/<string:heroname>')
 api.add_resource(HeroList, '/heroes')
 api.add_resource(Monster, '/monster')
 api.add_resource(UserRegister, '/user') #change to <integer:id>
-
 
 #api.add_resource(Student, '/student/<string:name>')
  
