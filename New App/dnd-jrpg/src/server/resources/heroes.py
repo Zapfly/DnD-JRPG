@@ -98,4 +98,4 @@ class HeroList(Resource):
         if len(hero_list_json['heroes']) > 0:
             return hero_list_json, 200
         else:
-            return {'message': "This user either doesn't exist, or they have no heroes"}, 404
+            return {'message': "Either this user doesn't exist, or they have no heroes"}, 404
