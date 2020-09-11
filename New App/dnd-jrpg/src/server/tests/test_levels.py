@@ -24,8 +24,8 @@ def client():
     #create level
     #create hero
     yield client
-    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
     rv = client.delete('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
+    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
     #delete level
     #delete hero
 

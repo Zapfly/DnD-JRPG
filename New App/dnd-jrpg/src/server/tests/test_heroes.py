@@ -35,11 +35,11 @@ def client():
     )
     #create hero
     yield client
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
+    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
     rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
     #delete level
     #delete hero
-    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
-    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
 
 
 #http://localhost:5000/hero/<string:heroname>
