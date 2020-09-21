@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt import JWT, jwt_required
+from flask_jwt_extended import jwt_required, fresh_jwt_required
 from models.levels import LevelModel
 
 
@@ -14,7 +14,7 @@ class Level(Resource):
         type=str,
     )
 
-    @jwt_required()
+    @fresh_jwt_required
     def post(self):
         data = Level.parser.parse_args()
 
@@ -29,7 +29,7 @@ class Level(Resource):
 
         return level.json(), 201
 
-    @jwt_required()
+    @jwt_required
     def get(self):
         data = Level.parser.parse_args()
 
@@ -39,7 +39,7 @@ class Level(Resource):
             return level.json(), 200
         return {'message': 'Level not found'}, 404
 
-    @jwt_required()
+    @fresh_jwt_required
     def put(self):
         data = Level.parser.parse_args()
         level = LevelModel.find_by_levelname(data['old_levelname'])      
@@ -58,7 +58,7 @@ class Level(Resource):
                 level.save_to_db()
                 return {'message': 'Level updated successfully.'}, 200
 
-    @jwt_required()
+    @fresh_jwt_required
     def delete(self):
         data = Level.parser.parse_args()
 
@@ -71,6 +71,6 @@ class Level(Resource):
 
 
 class LevelList(Resource):
-    @jwt_required()
+    @jwt_required
     def get(self):
         return {'levels': [level.json() for level in LevelModel.query.all()]}
