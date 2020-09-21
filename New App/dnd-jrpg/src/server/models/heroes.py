@@ -23,7 +23,7 @@ class HeroModel(db.Model):
         self.user_id = user_id
 
     def json(self):
-        return {'heroname': self.heroname, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite, 'user_id': self.user_id}
+        return {'heroname': self.heroname, 'atk': self.atk, 'hp': self.hp, 'max_hp': self.max_hp, 'sprite': self.sprite}
 
 
     @classmethod
