@@ -12,17 +12,21 @@ def client():
     api.app.config['SQALCHEMY_TRACK_MODIFICATIONS'] = False 
     db.init_app(api.app)
     
-    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
-    rv = client.post('/user', json={"username": "TestUser", "password": "TestPass"})
-    rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/register', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/login', json={"username": "TestUser", "password": "TestPass"})
+    json = rv.get_json()
+    setup_token = json["access_token"]
+    rv = client.delete('/user', headers={"Authorization" : f"Bearer {setup_token}"}, json={"target": -1})
+    rv = client.post('/register', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/login', json={"username": "TestUser", "password": "TestPass"})
     json = rv.get_json()
     global token
     token = json["access_token"]
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin"})
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin2"})
-    rv = client.delete('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
-    rv = client.post('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
-    rv = client.post('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin"})
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin2"})
+    rv = client.delete('/level', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus"})
+    rv = client.post('/level', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus"})
+    rv = client.post('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
             "monstername": "TestBoblin",
             "atk": 10,
             "hp": 15,
@@ -32,10 +36,10 @@ def client():
         }
     )
     yield client
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin"})
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin2"})
-    rv = client.delete('/level', headers={"Authorization" : f"JWT {token}"}, json={"levelname": "Mount Olympus"})
-    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin"})
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus", "monstername": "TestBoblin2"})
+    rv = client.delete('/level', headers={"Authorization" : f"Bearer {token}"}, json={"levelname": "Mount Olympus"})
+    rv = client.delete('/user', headers={"Authorization" : f"Bearer {setup_token}"}, json={"target": -1})
 
 
 #http://localhost:5000/monster
@@ -51,7 +55,7 @@ def test_postmonster(client):
     )   
     assert(rv.status_code == 401)
 
-    rv = client.post('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
             "monstername": "TestBoblin2",
             "atk": 11,
             "hp": 16,
@@ -65,7 +69,7 @@ def test_postmonster(client):
     assert(rv.status_code == 201)
     assert(json['monstername'] == 'TestBoblin2')
 
-    rv = client.post('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
             "monstername": "TestBoblin2",
             "atk": 11,
             "hp": 16,
@@ -87,7 +91,7 @@ def test_getmonster(client):
     })
     assert(rv.status_code == 401)
 
-    rv = client.get('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.get('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "levelname": "Mount Olympus",
         "monstername": "TestBoblin"
     })
@@ -95,7 +99,7 @@ def test_getmonster(client):
     json = rv.get_json()
     assert(json['monstername'] == "TestBoblin")
 
-    rv = client.get('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.get('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "levelname": "TestArena",
         "monstername": "TestBoblin"
     })
@@ -103,7 +107,7 @@ def test_getmonster(client):
     json = rv.get_json()
     assert(json['message'] == "Monster not found.")
     
-    rv = client.get('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.get('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "levelname": "Mount Olympus",
         "monstername": "TestBoblinOfDoom"
     })
@@ -125,7 +129,7 @@ def test_putmonster(client):
     #test required authorization
     assert(rv.status_code == 401)
 
-    rv = client.put('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
             "monstername": "TestBoblin2",
             "atk": 10,
             "hp": 15,
@@ -140,7 +144,7 @@ def test_putmonster(client):
     assert(json['message'] == "Monster updated.")
     assert(rv.status_code == 200)
 
-    rv = client.get('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.get('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "levelname": "Mount Olympus",
         "monstername": "TestBoblin"
     })
@@ -149,14 +153,14 @@ def test_putmonster(client):
     assert(json['message'] == "Monster not found.")
     assert(rv.status_code == 404)
 
-    rv = client.get('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.get('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "levelname": "Mount Olympus",
         "monstername": "TestBoblin2"
     })
     #previous test continued
     assert(rv.status_code == 200)
     
-    rv = client.put('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "monstername": "TestBoblin2",
         "atk": 30,
         "hp": 40,
@@ -170,7 +174,7 @@ def test_putmonster(client):
     assert(json['message'] == "A monster with name 'TestBoblin2' already exists in level 'Mount Olympus'.")
     assert(rv.status_code == 404)
 
-    rv = client.put('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "monstername": "TestBoblin",
         "atk": 30,
         "hp": 40,
@@ -184,7 +188,7 @@ def test_putmonster(client):
     assert(json['message'] == "Monster 'TestBoblin' created successfully.")
     assert(rv.status_code == 201)
 
-    rv = client.put('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "monstername": "TestBoblin2",
         "atk": 30,
         "hp": 40,
@@ -207,7 +211,7 @@ def test_deletemonster(client):
     )
     assert(rv.status_code == 401)
 
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "monstername": "TestBoblin",
         "levelname": "Mount Olympus"
         }
@@ -216,7 +220,7 @@ def test_deletemonster(client):
     assert("message" in json == {'message': 'Monster deleted.'})
     assert(rv.status_code == 200)
 
-    rv = client.delete('/monster', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/monster', headers={"Authorization" : f"Bearer {token}"}, json={
         "monstername": "TestBoblin",
         "levelname": "Mount Olympus"
         }

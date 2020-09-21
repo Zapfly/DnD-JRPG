@@ -12,32 +12,30 @@ def client():
     api.app.config['SQALCHEMY_TRACK_MODIFICATIONS'] = False 
     db.init_app(api.app)
     
-    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
-    rv = client.post('/user', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/register', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/login', json={"username": "TestUser", "password": "TestPass"})
     json = rv.get_json()
-    test_user = json['user']
-    global test_user_id
-    test_user_id = test_user['user_id']
-    #auth
-    rv = client.post('/auth', json={"username": "TestUser", "password": "TestPass"})
+    setup_token = json["access_token"]
+    rv = client.delete('/user', headers={"Authorization" : f"Bearer {setup_token}"}, json={"target": -1})
+    rv = client.post('/register', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.post('/login', json={"username": "TestUser", "password": "TestPass"})
     json = rv.get_json()
     global token
     token = json["access_token"]
-    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
-    rv = client.post('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"})
+    rv = client.post('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"}, json={
             "heroname": "Hercules",
             "atk": 30,
             "hp": 40,
             "max_hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
     #create hero
     yield client
-    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
-    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
-    rv = client.delete('/user', json={"username": "TestUser", "password": "TestPass"})
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
+    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"})
+    rv = client.delete('/user', headers={"Authorization" : f"Bearer {token}"}, json={"target": -1})
     #delete level
     #delete hero
 
@@ -48,18 +46,16 @@ def test_posthero(client):
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )   
     assert(rv.status_code == 401)
 
-    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"}, json={
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
 
@@ -68,12 +64,11 @@ def test_posthero(client):
     assert(rv.status_code == 200)
     assert(hero['heroname'] == 'Odysseus')
 
-    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"}, json={
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
 
@@ -83,21 +78,15 @@ def test_posthero(client):
 
 
 def test_gethero(client):
-    rv = client.get('/hero/Hercules', json={
-        "user_id": test_user_id
-    })
+    rv = client.get('/hero/Hercules')
     assert(rv.status_code == 401)
 
-    rv = client.get('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-    })
+    rv = client.get('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
     assert(rv.status_code == 200)
     json = rv.get_json()
     assert(json['heroname'] == "Hercules")
 
-    rv = client.get('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-    })
+    rv = client.get('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"})
     assert(rv.status_code == 404)
     json = rv.get_json()
     assert(json['message'] == "Hero not found")
@@ -108,19 +97,17 @@ def test_puthero(client):
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
     #test required authorization
     assert(rv.status_code == 401)
 
-    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"}, json={
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
     #updating when heroname exists but data["heroname"] does not
@@ -128,24 +115,19 @@ def test_puthero(client):
     assert(json['message'] == "Hero updated")
     assert(rv.status_code == 200)
 
-    rv = client.get('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-    })
+    rv = client.get('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
     #previous test continued
     assert(rv.status_code == 404)
 
-    rv = client.get('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-    })
+    rv = client.get('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"})
     #previous test continued
     assert(rv.status_code == 200)
     
-    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-        "heroname": "Odysseus",
-        "atk": 30,
-        "hp": 40,
-        "sprite": "string",
-        "user_id": test_user_id
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"}, json={
+            "heroname": "Odysseus",
+            "atk": 30,
+            "hp": 40,
+            "sprite": "string"
         }
     )
     #testing when heroname doesn't exist but data["heroname"] does
@@ -153,12 +135,11 @@ def test_puthero(client):
     assert(json['message'] == "A hero with name 'Odysseus' already exists.")
     assert(rv.status_code == 404)
 
-    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-        "heroname": "Hercules",
-        "atk": 30,
-        "hp": 40,
-        "sprite": "string",
-        "user_id": test_user_id
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"}, json={
+            "heroname": "Hercules",
+            "atk": 30,
+            "hp": 40,
+            "sprite": "string"
         }
     )
     json = rv.get_json()
@@ -166,12 +147,11 @@ def test_puthero(client):
     assert(json['message'] == "Hero created successfully")
     assert(rv.status_code == 201)
 
-    rv = client.put('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-        "heroname": "Odysseus",
-        "atk": 30,
-        "hp": 40,
-        "sprite": "string",
-        "user_id": test_user_id
+    rv = client.put('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"}, json={
+            "heroname": "Odysseus",
+            "atk": 30,
+            "hp": 40,
+            "sprite": "string"
         }
     )
     json = rv.get_json()
@@ -181,40 +161,30 @@ def test_puthero(client):
 
 
 def test_deletehero(client):
-    rv = client.delete('/hero/Hercules', json={
-            "user_id": test_user_id
-    })
+    rv = client.delete('/hero/Hercules')
     assert(rv.status_code == 401)
 
-    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-            "user_id": test_user_id
-    })
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
     json = rv.get_json()
     assert("message" in json == {'message': 'Hero deleted'})
     assert(rv.status_code == 200)
 
-    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={
-            "user_id": test_user_id
-    })
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
     json = rv.get_json()
     assert("message" in json == {'message': 'That hero does not exist'})
     assert(rv.status_code == 404)
 
 #http://localhost:5000/heroes
 def test_get_allheroes(client):
-    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={
+    rv = client.post('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"}, json={
             "heroname": "Odysseus",
             "atk": 30,
             "hp": 40,
-            "sprite": "string",
-            "user_id": test_user_id
+            "sprite": "string"
         }
     )
 
-    rv = client.get('/heroes', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-        }
-    )
+    rv = client.get('/heroes', headers={"Authorization" : f"Bearer {token}"})
     json = rv.get_json()
     assert(rv.status_code == 200)
     heroes = json["heroes"]
@@ -223,19 +193,13 @@ def test_get_allheroes(client):
     hero2 = heroes[1]
     assert(hero2["heroname"] == 'Odysseus')
 
-    rv = client.get('/heroes', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": -1
-        }
-    )
+    rv = client.get('/heroes')
     json = rv.get_json()
-    assert(rv.status_code == 404)
+    assert(rv.status_code == 401)
 
-    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
-    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"JWT {token}"}, json={"user_id": test_user_id})
+    rv = client.delete('/hero/Hercules', headers={"Authorization" : f"Bearer {token}"})
+    rv = client.delete('/hero/Odysseus', headers={"Authorization" : f"Bearer {token}"})
 
-    rv = client.get('/heroes', headers={"Authorization" : f"JWT {token}"}, json={
-        "user_id": test_user_id
-        }
-    )
+    rv = client.get('/heroes', headers={"Authorization" : f"Bearer {token}"})
     json = rv.get_json()
     assert(rv.status_code == 404)
