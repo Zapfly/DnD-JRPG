@@ -1,52 +1,91 @@
-import sqlite3
 from flask_restful import Resource, reqparse
-from flask_jwt import JWT, jwt_required
-
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, jwt_refresh_token_required
 from models.users import UserModel
     
-class UserRegister(Resource):
-    parcer = reqparse.RequestParser()
-    parcer.add_argument('username',
-        type=str,
-        required=True,
-        help="This field cannot be left blank!"
-    )
-    parcer.add_argument('password',
-        type=str,
-        required=True,
-        help="This field cannot be left blank!"
-    )
 
+_global_parser = reqparse.RequestParser()
+_global_parser.add_argument('username',
+    type=str,
+    required=True,
+    help="This field cannot be left blank!"
+)
+_global_parser.add_argument('password',
+    type=str,
+    required=True,
+    help="This field cannot be left blank!"
+)
+
+class UserRegister(Resource):
     def post(self):
-        data = UserRegister.parcer.parse_args()
+        data = _global_parser.parse_args()
 
         if UserModel.find_by_username(data['username']):
-            return {"message": "A user with that username already exists"}, 404
+            return {"message": "A user with that username already exists."}, 404
 
-        user = UserModel(**data)
-        user.save_to_db()
-        return_user = user.json()        
+        hashedpass = UserModel.generate_hash(data['password'])
+        user = UserModel(data['username'], hashedpass)
+        try:
+            user.save_to_db()        
+            return {"message": "User '{}' created successfully.".format(data['username'])}, 201
+        except:
+            return {"message": "Something went wrong."}, 500
 
-        return {"message": "User created successfully.", 'user': {'user_id': return_user['user_id'], 'username': return_user['username']}}, 201
-    
-    def delete(self):
-        data = UserRegister.parcer.parse_args()
+_user_parser = reqparse.RequestParser()
+_user_parser.add_argument('target',
+    type=int,
+    required=True,
+    help="This field cannot be left blank!"
+)
 
-        user = UserModel.find_by_username(data['username'])
+class User(Resource):
+    @classmethod
+    @jwt_required
+    def get(cls):
+        data = _user_parser.parse_args()
 
+        # -1 => targets self
+        if data['target'] == -1:
+            user_id = get_jwt_identity()
+        else:
+            user_id = data['target']
+        user = UserModel.find_by_id(user_id)
+        if user:
+            return user.json(), 200
+        return {"message": "User not found."}, 404
+
+    @classmethod
+    @jwt_required
+    def delete(cls):
+        data = _user_parser.parse_args()
+
+        # -1 => targets self
+        if data['target'] == -1:
+            user_id = get_jwt_identity()
+        else:
+            user_id = data['target']
+        user = UserModel.find_by_id(user_id)
         if user:
             user.delete_from_db()             
-            return {"message": "User deleted successfully."}, 200
-           
-        return {"message": "A user with that username does not exist"}, 404
+            return {"message": "User deleted successfully."}, 200           
+        return {"message": "User not found."}, 404
 
-    @jwt_required()
-    def get(self):
-        data = UserRegister.parcer.parse_args()
+class UserLogin(Resource):
+    @classmethod
+    def post(cls):
+        data = _global_parser.parse_args()
+        user = UserModel.find_by_username(data['username'])
+        if user and UserModel.verify_hash(data['password'], user.password):
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(user.id)
+            return {
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }, 200
+        return {"message": "Invalid credentials."}, 401
 
-        user = UserModel.find_by_username_and_password(data['username'], data['password'])
-
-        if user:
-            result = user.json()
-            return {"username": result["username"], "user_id": result["user_id"]}, 200
-        return {"message": "That user does not exist"}, 404
+class TokenRefresh(Resource):
+    @jwt_refresh_token_required
+    def post(self):
+        user = get_jwt_identity()
+        new_token = create_access_token(identity=user.id, fresh=False)
+        return {'access_token': new_token}, 200
