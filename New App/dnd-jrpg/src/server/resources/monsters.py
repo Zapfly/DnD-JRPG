@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt import JWT, jwt_required
+from flask_jwt_extended import jwt_required, fresh_jwt_required
 
 from models.monsters import MonsterModel
 
@@ -32,7 +32,7 @@ class Monster(Resource):
         type=str
     )
 
-    @jwt_required()
+    @fresh_jwt_required
     def post(self):
         data = Monster.parser.parse_args()
 
@@ -47,7 +47,7 @@ class Monster(Resource):
 
         return monster.json(), 201
 
-    @jwt_required()
+    @jwt_required
     def get(self):
         data = Monster.parser.parse_args()
 
@@ -57,7 +57,7 @@ class Monster(Resource):
             return monster.json(), 200
         return {'message': 'Monster not found.'}, 404
 
-    @jwt_required()
+    @jwt_required
     def put(self):
         data = Monster.parser.parse_args()
         monster = MonsterModel.find_by_levelname_and_monstername(data['levelname'], data['old_monstername'])      
@@ -81,7 +81,7 @@ class Monster(Resource):
                 monster.save_to_db()
                 return {'message': "Monster updated."}, 200
 
-    @jwt_required()
+    @fresh_jwt_required
     def delete(self):
         data = Monster.parser.parse_args()
 
