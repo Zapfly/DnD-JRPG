@@ -21,6 +21,7 @@ export const ContextProvider = (props) => {
     const [levelList, setLevelList] = useState(null);
     const [currentLevel, setCurrentLevel] = useState(null);
     const [combatLog, setCombatLog] = useState([]);
+    const [url, setUrl] = useState("http://localhost:5000");
 
     // useFetchWithAuth()
 
@@ -74,6 +75,8 @@ export const ContextProvider = (props) => {
                 setLevelList,
                 currentLevel,
                 setCurrentLevel,
+                url,
+                setUrl,
                 addToLog,
                 deleteCombatants,
             }}>

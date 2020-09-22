@@ -11,7 +11,7 @@ const UserRegisterComp = (props) => {
     const appContext = React.useContext(AppContext);
 
     const handleSubmit = async() => {
-        let res = await fetchFunc("http://localhost:5000/user", 'POST', {"username": `${username}`, "password": `${password}`})
+        let res = await fetchFunc(`${appContext.url}/register`, 'POST', {"username": `${username}`, "password": `${password}`})
         console.log(res)
     }
 

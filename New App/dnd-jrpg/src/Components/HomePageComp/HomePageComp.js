@@ -24,7 +24,7 @@ const HomePageComp = () => {
       return <UserRegisterComp
       stateHandler={stateHandler}/>;
     } else return <AuthOptionsComp
-    stateHandler={stateHandler}/>;
+      stateHandler={stateHandler}/>;
   }
   
 

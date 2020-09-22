@@ -11,7 +11,7 @@ const UserLoginComp = (props) => {
     const appContext = React.useContext(AppContext);
 
     const handleSubmit = async() => {
-        let res = await fetchFunc("http://localhost:5000/auth", 'POST', {"username": `${username}`, "password": `${password}`})
+        let res = await fetchFunc(`${appContext.url}/login`, 'POST', {"username": `${username}`, "password": `${password}`})
         console.log(res)
     }
 
