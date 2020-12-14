@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import { AppContext } from '../../AppContext';
-import styles from './userauth.module.css';
+// import styles from './userauth.module.css';
 
-import {fetchFunc} from '../FetchComp/FetchComp.js';
+import { fetchFunc } from '../FetchComp/FetchComp.js';
 
 const UserLoginComp = (props) => {
     const [username, setUsername] = useState("");
@@ -12,7 +12,17 @@ const UserLoginComp = (props) => {
 
     const handleSubmit = async() => {
         let res = await fetchFunc(`${appContext.url}/login`, 'POST', {"username": `${username}`, "password": `${password}`})
-        console.log(res)
+        if (res['access_token']) {
+            let token = res['access_token']
+            appContext.setToken(token)
+            appContext.setRefreshToken(token)
+            appContext.getHeroes(token)
+            // appContext.getCurrentLevel(token)
+            props.pageStateHandler('menu')
+            return res
+        } else {
+            return `Error: ${res["message"]}`
+        }
     }
 
     return (
@@ -22,7 +32,7 @@ const UserLoginComp = (props) => {
             <label>Password:</label>
             <input className="password-input" type="password" value={password} onChange={e => setPassword(e.target.value)}></input>
             <button onClick={handleSubmit}>Log In</button>
-            <button className="back-button" onClick={() => props.stateHandler(null)}>Go Back</button>
+            <button className="back-button" onClick={() => props.displayStateHandler(null)}>Go Back</button>
         </div>
     );
 }
