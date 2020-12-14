@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
 // import './homepagecomp.module.css';
-// import { AppContext } from '../../AppContext';
 
 import UserLoginComp from '../UserAuth/UserLoginComp.js';
 import UserRegisterComp from '../UserAuth/UserRegisterComp.js';
 import AuthOptionsComp from '../UserAuth/AuthOptionsComp.js';
 
 
-const HomePageComp = () => {
+const HomePageComp = (props) => {
   const [userAuthDisplay, setUserAuthDisplay] = useState(null);
-
-  // const appContext = React.useContext(AppContext);
   
-  const stateHandler = (data) => {
-    setUserAuthDisplay(data);
+  const displayStateHandler = (displayName) => {
+    setUserAuthDisplay(displayName);
   }
 
   const authDisplay = () => {
     if (userAuthDisplay === "login") {
       return <UserLoginComp
-      stateHandler={stateHandler}/>;
+      displayStateHandler={displayStateHandler}
+      pageStateHandler={props.pageStateHandler}/>;
     } if (userAuthDisplay === "register") {
       return <UserRegisterComp
-      stateHandler={stateHandler}/>;
+      displayStateHandler={displayStateHandler}
+      pageStateHandler={props.pageStateHandler}/>;
     } else return <AuthOptionsComp
-      stateHandler={stateHandler}/>;
+      displayStateHandler={displayStateHandler}/>;
   }
   
 
