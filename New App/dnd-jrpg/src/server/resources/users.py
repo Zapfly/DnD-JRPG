@@ -15,6 +15,7 @@ _global_parser.add_argument('password',
     help="This field cannot be left blank!"
 )
 
+
 class UserRegister(Resource):
     def post(self):
         data = _global_parser.parse_args()
@@ -30,12 +31,14 @@ class UserRegister(Resource):
         except:
             return {"message": "Something went wrong."}, 500
 
+
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('target',
     type=int,
     required=True,
     help="This field cannot be left blank!"
 )
+
 
 class User(Resource):
     @classmethod
@@ -87,5 +90,5 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
         user = get_jwt_identity()
-        new_token = create_access_token(identity=user.id, fresh=False)
+        new_token = create_access_token(identity=user, fresh=False)
         return {'access_token': new_token}, 200
