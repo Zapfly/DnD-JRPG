@@ -31,7 +31,7 @@ class Hero(Resource):
         if HeroModel.find_by_user_id_and_heroname(user_id, heroname):
             return {'message': "A hero with name '{}' already exists.".format(heroname)}, 404
 
-        hero = HeroModel(data['heroname'], data['atk'], data['hp'], data['max_hp'], data['sprite'], user_id)
+        hero = HeroModel(heroname, data['atk'], data['hp'], data['max_hp'], data['sprite'], user_id)
         hero.save_to_db()
 
         return {'message': 'Hero created successfully', 'hero': hero.json()}
